@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'name' => config('admin.name'),
             'email' => config('admin.email'),
             'password' => Hash::make(config('admin.password')),
+            'role' => 'admin',
             'email_verified_at' => Carbon::now(),
         ]);
     }

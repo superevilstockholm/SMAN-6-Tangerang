@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 // Middlewares
+use App\Http\Middleware\Auth\RoleMiddleware;
 use App\Http\Middleware\Auth\CookieBasedSanctumAuthMiddleware;
 use App\Http\Middleware\Auth\OptionalCookieBasedSanctumAuthMiddleware;
 
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
+            'role' => RoleMiddleware::class,
             'auth.sanctum.cookie' => CookieBasedSanctumAuthMiddleware::class,
             'optional.auth.sanctum.cookie' => OptionalCookieBasedSanctumAuthMiddleware::class,
         ]);

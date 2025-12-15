@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 // Auth Controller
 use App\Http\Controllers\AuthController;
 
+// Master Data Controllers
+use App\Http\Controllers\MasterData\UserController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,6 +25,12 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
             Route::get('/', function () {
 
             })->name('index');
+            // Master Data
+            Route::prefix('master-data')->name('master-data.')->group(function () {
+                Route::resource('users', UserController::class)->parameters([
+                    'users' => 'user'
+                ]);
+            });
         });
         // Teacher
         Route::middleware(['role:teacher'])->prefix('teacher')->name('teacher.')->group(function () {

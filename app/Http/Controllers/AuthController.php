@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Throwable;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
+// Models
+use App\Models\User;
+
+class AuthController extends Controller
+{
+    public function login(Request $request)
+    {
+        try {
+            if ($request->isMethod('post')) {
+                $validated = $request->validate([
+                    'email' => 'required|email|max:255',
+                    'password' => 'required|max:255'
+                ], [
+                    'email.required' => 'Kolom email wajib di isi.',
+                    'email.email' => 'Format email tidak sesuai.',
+                    'email.max' => 'Panjang email maksimal :max karakter.',
+                    'password.required' => 'Kolom password wajib di isi.',
+                    'password.max' => 'Panjang password maksimal :max karakter.',
+                ]);
+                $user = User::where('email', $validated['email'])->first();
+                if (!$user || !Hash::check($validated['password'], $user->password)) {
+                    return back()->withErrors('Email atau password salah.')->withInput(['email'])->withoutCookie('auth-token');
+                }
+                // Revoke old tokens
+                $user->tokens()->delete();
+                // Create new token
+                $tokenResult = $user->createToken('auth-token');
+                $token = $tokenResult->accessToken;
+                $token->expires_at = Carbon::now()->addDays(7); // 7 days
+                $token->save();
+                $plainToken = $tokenResult->plainTextToken;
+                return redirect(route('dashboad.' . $user->role . '.index'))->cookie(
+                    'auth-token', // name
+                    $plainToken, // value
+                    60 * 24 * 7, // expiration in minutes - 7 days
+                    '/', // path
+                    null, // domain
+                    false, // secure
+                    true, // httponly
+                );
+            }
+            return view('pages.auth.login', [
+                'meta' =>[
+                    'showNavbar' => false,
+                    'showFooter' => false,
+                ]
+            ]);
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput(['email'])->withoutCookie('auth-token');
+        } catch (Throwable $e) {
+            return back()->withErrors('Terjadi kesalahan.')->withInput(['email'])->withoutCookie('auth-token');
+        }
+    }
+}

@@ -90,7 +90,7 @@
                                     <i class="ti ti-user"></i>
                                     <span>Account Profile</span>
                                 </a>
-                                <form action="#" method="POST">
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button id="logout-button" type="submit" class="dropdown-item">
                                         <i class="ti ti-logout"></i>

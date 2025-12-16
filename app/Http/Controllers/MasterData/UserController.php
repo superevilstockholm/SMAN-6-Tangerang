@@ -58,7 +58,7 @@ class UserController extends Controller
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
 
-            return view('pages.dashboard.master-data.user.index', [
+            return view('pages.dashboard.admin.master-data.user.index', [
                 'meta' => [
 
                 ],
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function create(): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.master-data.user.create', [
+            return view('pages.dashboard.admin.master-data.user.create', [
                 'meta' => [
 
                 ],
@@ -140,7 +140,7 @@ class UserController extends Controller
     public function show(User $user): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.master-data.user.show', [
+            return view('pages.dashboard.admin.master-data.user.show', [
                 'meta' => [
 
                 ],
@@ -157,7 +157,7 @@ class UserController extends Controller
     public function edit(User $user): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.master-data.user.edit', [
+            return view('pages.dashboard.admin.master-data.user.edit', [
                 'meta' => [
 
                 ],

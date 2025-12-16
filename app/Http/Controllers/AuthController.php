@@ -6,6 +6,7 @@ use Throwable;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
@@ -63,7 +64,46 @@ class AuthController extends Controller
         } catch (ValidationException $e) {
             return back()->withErrors($e->errors())->withInput()->withoutCookie('auth-token');
         } catch (Throwable $e) {
+            Log::error('Login error', [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'request' => [
+                    'url' => $request->fullUrl(),
+                    'ip' => $request->ip(),
+                    'email' => $request->input('email'),
+                ],
+            ]);
             return back()->withErrors('Terjadi kesalahan.')->withInput()->withoutCookie('auth-token');
+        }
+    }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        try {
+            $user = $request->user();
+            // Check if token exists
+            if (!empty($user->tokens)) {
+                // Revoke token
+                $user->tokens()->delete();
+            }
+            return redirect(route('login'))->with('success', 'Logout berhasil.')->withoutCookie('auth-token');
+        } catch (Throwable $e) {
+            Log::error('Login error', [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'request' => [
+                    'url' => $request->fullUrl(),
+                    'ip' => $request->ip(),
+                    'email' => $request->input('email'),
+                ],
+            ]);
+            return redirect(route('login'))->withErrors("Terjadi kesalahan.")->withoutCookie('auth-token');
         }
     }
 }

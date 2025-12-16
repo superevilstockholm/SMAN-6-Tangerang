@@ -19,6 +19,7 @@ Route::middleware(['optional.auth.sanctum.cookie'])->group(function () {
 
 // Protected
 Route::middleware(['auth.sanctum.cookie'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::prefix('/dashboard')->name('dashboard.')->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {

@@ -26,7 +26,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
-                            <h5 class="d-flex align-items-center justify-content-between">
+                            <h5 class="d-flex align-items-center justify-content-between text-body">
                                 Recent Notification
                                 <span id="readAllNotifications"
                                     class="badge bg-primary rounded-pill d-flex align-items-center gap-1"
@@ -61,7 +61,7 @@
                     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
                             <h4 class="d-flex align-items-center gap-1">
-                                <span>
+                                <span class="text-body">
                                     <?php
                                     date_default_timezone_set('Asia/Jakarta');
                                     $hour = date('H');
@@ -86,13 +86,17 @@
                             <hr />
                             <div class="profile-notification-scroll position-relative"
                                 style="max-height: calc(100vh - 280px)">
-                                <a href="javascript:void(0);" id="account-profile-button" class="dropdown-item">
+                                <a href="javascript:void(0);" id="account-profile-button" class="dropdown-item text-body">
                                     <i class="ti ti-user"></i>
                                     <span>Account Profile</span>
                                 </a>
-                                <form action="#" method="POST">
+                                <a href="javascript:void(0);" id="theme-button" class="dropdown-item text-body">
+                                    <i class="ti" id="theme-icon"></i>
+                                    <span>Theme</span>
+                                </a>
+                                <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button id="logout-button" type="submit" class="dropdown-item">
+                                    <button id="logout-button" type="submit" class="dropdown-item text-body">
                                         <i class="ti ti-logout"></i>
                                         <span>Logout</span>
                                     </button>
@@ -105,3 +109,15 @@
         </div>
     </div>
 </header>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const theme = localStorage.getItem('theme') || 'light';
+        applyThemeIcon(theme);
+        document.getElementById('theme-button').addEventListener('click', function () {
+            const current = document.documentElement.getAttribute('data-bs-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            applyTheme(next);
+            applyThemeIcon(next);
+        });
+    });
+</script>

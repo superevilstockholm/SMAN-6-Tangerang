@@ -2,6 +2,24 @@
 <html lang="en">
 
 <head>
+    {{-- Theme --}}
+    <script>
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+        function applyThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (!icon) return;
+            icon.classList.remove('ti-sun', 'ti-moon');
+            icon.classList.add(theme === 'light' ? 'ti-sun' : 'ti-moon');
+        }
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const theme = (savedTheme === 'dark' || savedTheme === 'light') ? savedTheme : 'light';
+            applyTheme(theme);
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">

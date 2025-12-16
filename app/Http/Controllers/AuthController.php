@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Throwable;
 use Carbon\Carbon;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 
 // Models
@@ -13,9 +15,12 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): View | RedirectResponse
     {
         try {
+            if ($request->user()) {
+                return redirect(route('dashboard.' . $request->user()->role->value . '.index'));
+            }
             if ($request->isMethod('post')) {
                 $validated = $request->validate([
                     'email' => 'required|email|max:255',
@@ -29,7 +34,7 @@ class AuthController extends Controller
                 ]);
                 $user = User::where('email', $validated['email'])->first();
                 if (!$user || !Hash::check($validated['password'], $user->password)) {
-                    return back()->withErrors('Email atau password salah.')->withInput(['email'])->withoutCookie('auth-token');
+                    return back()->withErrors('Email atau password salah.')->withInput()->withoutCookie('auth-token');
                 }
                 // Revoke old tokens
                 $user->tokens()->delete();
@@ -39,7 +44,7 @@ class AuthController extends Controller
                 $token->expires_at = Carbon::now()->addDays(7); // 7 days
                 $token->save();
                 $plainToken = $tokenResult->plainTextToken;
-                return redirect(route('dashboad.' . $user->role . '.index'))->cookie(
+                return redirect(route('dashboard.' . $user->role->value . '.index'))->cookie(
                     'auth-token', // name
                     $plainToken, // value
                     60 * 24 * 7, // expiration in minutes - 7 days
@@ -56,9 +61,9 @@ class AuthController extends Controller
                 ]
             ]);
         } catch (ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput(['email'])->withoutCookie('auth-token');
+            return back()->withErrors($e->errors())->withInput()->withoutCookie('auth-token');
         } catch (Throwable $e) {
-            return back()->withErrors('Terjadi kesalahan.')->withInput(['email'])->withoutCookie('auth-token');
+            return back()->withErrors('Terjadi kesalahan.')->withInput()->withoutCookie('auth-token');
         }
     }
 }

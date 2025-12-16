@@ -9,7 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MasterData\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('pages.index');
 });
 
 // Optional Auth
@@ -23,7 +23,9 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
         // Admin
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', function () {
-
+                return view('pages.dashboard.admin.index', [
+                    'meta' => ['sidebarItems' => adminSidebarItems()],
+                ]);
             })->name('index');
             // Master Data
             Route::prefix('master-data')->name('master-data.')->group(function () {

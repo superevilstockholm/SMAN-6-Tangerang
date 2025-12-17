@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Admin User
         User::updateOrCreate([
             'email' => config('admin.email'),
         ], [
@@ -28,5 +29,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'email_verified_at' => Carbon::now(),
         ]);
+
+        // Student / Teacher
+        User::factory(50)->create();
     }
 }

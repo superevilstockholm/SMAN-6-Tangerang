@@ -38,13 +38,17 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
         // Teacher
         Route::middleware(['role:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
             Route::get('/', function () {
-
+                return view('pages.dashboard.teacher.index', [
+                    'meta' => ['sidebarItems' => adminSidebarItems()],
+                ]);
             })->name('index');
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {
             Route::get('/', function () {
-
+                return view('pages.dashboard.student.index', [
+                    'meta' => ['sidebarItems' => adminSidebarItems()],
+                ]);
             })->name('index');
         });
     });

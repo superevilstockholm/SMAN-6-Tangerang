@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'Dashboard Admin - SMAN 6 Tangerang')
+@section('title', 'Dashboard Siswa - SMAN 6 Tangerang')
 @section('meta-description', '')
 @section('meta-keywords', '')
 @section('content')

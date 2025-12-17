@@ -60,7 +60,7 @@ class UserController extends Controller
 
             return view('pages.dashboard.admin.master-data.user.index', [
                 'meta' => [
-
+                    'sidebarItems' => adminSidebarItems(),
                 ],
                 'users' => $users,
             ]);

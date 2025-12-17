@@ -9,6 +9,9 @@ if (!function_exists('adminSidebarItems')) {
             'main' => [
                 ['label' => 'dashboard', 'icon' => 'ti ti-dashboard', 'route' => 'dashboard.admin.index'],
             ],
+            'master data' => [
+                ['label' => 'users', 'icon' => 'ti ti-users-group', 'route' => 'dashboard.admin.master-data.users.index'],
+            ],
         ];
         foreach ($items as $group => &$groupItems) {
             foreach ($groupItems as &$item) {

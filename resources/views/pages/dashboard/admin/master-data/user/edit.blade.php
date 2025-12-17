@@ -35,7 +35,7 @@
                             <img class="object-fit-cover rounded" style="height: 150px; width: 150px;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ?? '-' }}">
                         </div>
                         <div class="mb-4">
-                            <label for="profile_picture_image" class="form-label">Gambar Baru (Opsional)</label>
+                            <label for="profile_picture_image" class="form-label">Foto Profil Baru (Opsional)</label>
                             <input type="file" name="profile_picture_image" class="form-control form-control-sm @error('profile_picture_image') is-invalid @enderror">
                             @error('profile_picture_image')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -75,7 +75,7 @@
                                 @endforeach
                             </select>
                             <label for="floatingSelectRole">Role</label>
-                            @error('email')
+                            @error('role')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

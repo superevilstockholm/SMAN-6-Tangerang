@@ -77,7 +77,7 @@ class UserController extends Controller
         try {
             return view('pages.dashboard.admin.master-data.user.create', [
                 'meta' => [
-
+                    'sidebarItems' => adminSidebarItems(),
                 ],
             ]);
         } catch (Throwable $e) {

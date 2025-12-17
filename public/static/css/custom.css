@@ -18,9 +18,7 @@ html[data-bs-theme="light"] .pc-container {
 }
 html[data-bs-theme="dark"] .pc-container,
 html[data-bs-theme="dark"] .pc-head-link.head-link-primary,
-html[data-bs-theme="dark"] .pc-head-link.head-link-secondary,
-html[data-bs-theme="dark"] .dropdown-user-profile,
-html[data-bs-theme="dark"] .dropdown-notification {
+html[data-bs-theme="dark"] .pc-head-link.head-link-secondary {
     background-color: rgb(33, 33, 33) !important;
 }
 
@@ -47,7 +45,9 @@ html[data-bs-theme="dark"] .pc-header {
 
 html[data-bs-theme="dark"] .dropdown-menu.dropdown-user-profile.dropdown-menu-end,
 html[data-bs-theme="dark"] .dropdown-menu.dropdown-notification.dropdown-menu-end {
-    box-shadow: 0 4px 24px 0 rgba(var(--bs-body-color-rgb), 0.1);
+    background-color: rgb(29, 29, 29) !important;
+    box-shadow: 0 0 0 0 rgba(var(--bs-body-color-rgb), 0) !important;
+    border: solid rgb(43, 43, 43) var(--bs-border-width) !important;
 }
 
 @media (min-width: 1025px) {

@@ -86,6 +86,11 @@ html[data-bs-theme="dark"] .table {
     --bs-table-border-color: rgba(var(--bs-body-color-rgb), 0.1) !important;
 }
 
+html[data-bs-theme="dark"] .swal2-popup {
+    background-color: rgb(29, 29, 29) !important;
+    border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
+}
+
 .pagination {
     --bs-pagination-bg: transparent !important;
     --bs-pagination-disabled-bg: rgba(var(--bs-body-color-rgb), 0.1) !important;

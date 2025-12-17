@@ -10,7 +10,7 @@
                 <div
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
-                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Users</h3>
+                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Pengguna</h3>
                         <p class="p-0 m-0 fw-medium text-muted">Manajemen data pengguna.</p>
                     </div>
                     <div class="d-flex align-items-center">
@@ -126,8 +126,8 @@
                                         </td>
                                         <td>{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}</td>
                                         <td>{{ $user->email ?? '-' }}</td>
-                                        <td>{{ $user->role->value ? ucwords(strtolower($user->role->value)) : '-' }}</td>
-                                        <td>{{ $user->created_at->format('d M Y H:i') }}</td>
+                                        <td>{{ $user->role?->value ? ucwords(strtolower($user->role->value)) : '-' }}</td>
+                                        <td>{{ $user->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button" class="btn border-0 p-0 dropdown-toggle hide-arrow"
@@ -150,7 +150,7 @@
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
                                                             data-id="{{ $user->id }}" data-name="{{ $user->name }}">
-                                                            <i class="ti ti-trash me-1"></i> Hapus
+                                                            <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
                                                 </div>

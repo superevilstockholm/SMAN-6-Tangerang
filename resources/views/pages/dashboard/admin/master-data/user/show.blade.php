@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-8 mb-4 mb-lg-0">
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-4">Data Pribadi</h4>

@@ -32,7 +32,7 @@
                             <div class="d-flex align-items-center">
                                 @php
                                     $limits = [5, 10, 25, 50, 'all'];
-                                    $currentLimit = request('limit', 5);
+                                    $currentLimit = request('limit', 10);
                                 @endphp
                                 <label for="limitSelect" class="form-label mb-0 me-2">Limit</label>
                                 <select class="form-select form-select-sm" id="limitSelect" name="limit"

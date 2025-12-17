@@ -27,6 +27,7 @@
     <meta name="description" content="@yield('meta-description')">
     <meta name="keywords" content="@yield('meta-keywords')">
     <title>@yield('title', 'SMAN 6 Tangerang')</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

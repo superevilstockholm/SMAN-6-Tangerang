@@ -77,7 +77,7 @@ class UserController extends Controller
         try {
             return view('pages.dashboard.admin.master-data.user.create', [
                 'meta' => [
-
+                    'sidebarItems' => adminSidebarItems(),
                 ],
             ]);
         } catch (Throwable $e) {
@@ -142,7 +142,7 @@ class UserController extends Controller
         try {
             return view('pages.dashboard.admin.master-data.user.show', [
                 'meta' => [
-
+                    'sidebarItems' => adminSidebarItems(),
                 ],
                 'user' => $user
             ]);
@@ -159,7 +159,7 @@ class UserController extends Controller
         try {
             return view('pages.dashboard.admin.master-data.user.edit', [
                 'meta' => [
-
+                    'sidebarItems' => adminSidebarItems(),
                 ],
                 'user' => $user
             ]);

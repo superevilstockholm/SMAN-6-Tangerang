@@ -14,7 +14,7 @@
 }
 
 html[data-bs-theme="dark"] * {
-    color: rgb(255, 255, 255);
+    color: var(--bs-body-color);
 }
 
 html[data-bs-theme="light"] .pc-container {
@@ -73,6 +73,7 @@ html[data-bs-theme="dark"] .card {
 html[data-bs-theme="dark"] .form-control, html[data-bs-theme="dark"] .form-select {
     background-color: rgb(29, 29, 29) !important;
     color: var(--bs-body-color);
+    border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
 }
 html[data-bs-theme="dark"] .form-floating > label {
     color: var(--bs-body-color) !important;
@@ -80,6 +81,16 @@ html[data-bs-theme="dark"] .form-floating > label {
 html[data-bs-theme="dark"] .form-floating > label::after {
     display: none !important;
 }
+
+html[data-bs-theme="dark"] .table {
+    --bs-table-border-color: rgba(var(--bs-body-color-rgb), 0.1) !important;
+}
+
+html[data-bs-theme="dark"] .swal2-popup {
+    background-color: rgb(29, 29, 29) !important;
+    border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
+}
+
 .pagination {
     --bs-pagination-bg: transparent !important;
     --bs-pagination-disabled-bg: rgba(var(--bs-body-color-rgb), 0.1) !important;

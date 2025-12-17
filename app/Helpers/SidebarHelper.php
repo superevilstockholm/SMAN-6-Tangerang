@@ -15,8 +15,8 @@ if (!function_exists('adminSidebarItems')) {
         ];
         foreach ($items as $group => &$groupItems) {
             foreach ($groupItems as &$item) {
-                if ($item['route'] === 'dashboard.index') {
-                    $item['active_pattern'] = 'dashboard.index';
+                if ($item['route'] === 'dashboard.admin.index' || $item['route'] === 'dashboard.teacher.index') {
+                    $item['active_pattern'] = $item['route'];
                 } else {
                     $item['active_pattern'] = Str::replaceLast('.index', '.*', $item['route']);
                 }

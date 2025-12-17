@@ -74,6 +74,16 @@
 {{-- ====== End Template ====== --}}
 {{-- Custom CSS --}}
 <link rel="stylesheet" href="{{ asset('static/css/custom.css') }}">
+<style>
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 0 transparent inset !important;
+        box-shadow: 0 0 0 0 transparent inset !important;
+        color: var(--bs-body-color) !important;
+    }
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
+        -webkit-text-fill-color: var(--bs-body-color) !important;
+    }
+</style>
 </head>
 @endpush
 @push('js')

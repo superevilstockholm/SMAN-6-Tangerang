@@ -91,11 +91,14 @@ html[data-bs-theme="dark"] .swal2-popup {
     border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
 }
 
-.pagination {
+html[data-bs-theme="dark"] .pagination {
     --bs-pagination-bg: transparent !important;
     --bs-pagination-disabled-bg: rgba(var(--bs-body-color-rgb), 0.1) !important;
     --bs-pagination-hover-bg: rgba(var(--bs-body-color-rgb), 0.1) !important;
     --bs-pagination-focus-bg: rgba(var(--bs-body-color-rgb), 0.1) !important;
+    --bs-pagination-border-color: rgba(var(--bs-body-color-rgb), 0.5) !important;
+    --bs-pagination-active-border-color: rgba(var(--bs-body-color-rgb), 0.5) !important;
+    --bs-pagination-disabled-border-color: rgba(var(--bs-body-color-rgb), 0.5) !important;
 }
 
 @media (min-width: 1025px) {

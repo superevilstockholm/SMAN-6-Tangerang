@@ -15,7 +15,12 @@
                             <label for="email" class="mb-2">Alamat Email</label>
                             <input type="email" name="email" id="email" class="form-control mb-3" placeholder="Alamat Email" value="{{ old('email') }}" required>
                             <label for="password" class="mb-2">Kata Sandi</label>
-                            <input type="password" name="password" id="password" class="form-control mb-3" placeholder="Kata Sandi" required>
+                            <div class="input-group mb-3">
+                                <input type="password" name="password" id="password" class="form-control" style="border-right: 0 !important;" placeholder="Kata Sandi" required>
+                                <button class="btn bg-transparent" type="button" id="togglePassword" aria-label="Toggle password visibility">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
                             <x-alerts :errors="$errors" class="mb-3"></x-alerts>
                             <button type="submit" class="btn btn-primary w-100">Masuk</button>
                         </form>
@@ -25,4 +30,26 @@
         </div>
     </div>
 </section>
+<style>
+    #togglePassword {
+        background-color: rgb(29, 29, 29) !important;
+        color: var(--bs-body-color);
+        border: solid rgba(var(--bs-body-color-rgb), 0.1) var(--bs-border-width) !important;
+        border-left: 0 !important;
+    }
+    #password:hover, #password:focus, #password:active {
+        box-shadow: none !important;
+    }
+</style>
+<script>
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('togglePassword');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    toggleBtn.addEventListener('click', function () {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        toggleIcon.classList.toggle('bi-eye', !isPassword);
+        toggleIcon.classList.toggle('bi-eye-slash', isPassword);
+    });
+</script>
 @endsection

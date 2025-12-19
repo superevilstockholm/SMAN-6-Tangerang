@@ -162,7 +162,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="6" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
                                                 Tidak ada pengguna yang ditemukan dengan kriteria tersebut.
                                             </div>

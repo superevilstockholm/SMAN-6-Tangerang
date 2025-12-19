@@ -13,8 +13,13 @@ class SchoolHistory extends Model
         'title',
         'description',
         'image_path',
-        'start_date',
-        'end_date',
+        'start_year',
+        'end_year',
+    ];
+
+    protected $casts = [
+        'start_year' => 'integer',
+        'end_year' => 'integer',
     ];
 
     protected $appends = [
@@ -27,9 +32,4 @@ class SchoolHistory extends Model
             ? Storage::url($this->image_path)
             : asset('static/img/no-image-palceholder.svg');
     }
-
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-    ];
 }

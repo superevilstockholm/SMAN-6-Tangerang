@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('image_path')->nullable();
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->year('start_year');
+            $table->year('end_year')->nullable();
             $table->timestamps();
         });
     }

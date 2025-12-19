@@ -17,7 +17,7 @@
                         <p class="p-0 m-0 fw-medium text-muted">Manajemen data pengguna.</p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="{{ route('dashboard.admin.master-data.users.create') }}"
+                        <a href="{{ route('dashboard.admin.master-data.school-histories.create') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
                             <i class="ti ti-plus me-1"></i> Tambah Pengguna
                         </a>
@@ -30,7 +30,7 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.admin.master-data.users.index') }}" id="filterForm">
+                    <form method="GET" action="{{ route('dashboard.admin.master-data.school-histories.index') }}" id="filterForm">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
@@ -50,11 +50,11 @@
                                 <span class="ms-2">entries</span>
                             </div>
                             <div class="text-muted small">
-                                @if ($users instanceof LengthAwarePaginator)
-                                    Menampilkan {{ $users->firstItem() }} hingga {{ $users->lastItem() }} dari
-                                    {{ $users->total() }} total entri
+                                @if ($school_histories instanceof LengthAwarePaginator)
+                                    Menampilkan {{ $school_histories->firstItem() }} hingga {{ $school_histories->lastItem() }} dari
+                                    {{ $school_histories->total() }} total entri
                                 @else
-                                    Menampilkan {{ $users->count() }} total entri
+                                    Menampilkan {{ $school_histories->count() }} total entri
                                 @endif
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                             <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-search"></i> Cari
                             </button>
-                            <a href="{{ route('dashboard.admin.master-data.users.index') }}"
+                            <a href="{{ route('dashboard.admin.master-data.school-histories.index') }}"
                                 class="btn btn-secondary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-rotate-clockwise-2"></i> Reset
                             </a>
@@ -118,11 +118,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($users as $index => $user)
+                                @forelse ($school_histories as $index => $user)
                                     <tr>
                                         <td class="text-center">
-                                            @if ($users instanceof LengthAwarePaginator)
-                                                {{ $users->firstItem() + $loop->index }}
+                                            @if ($school_histories instanceof LengthAwarePaginator)
+                                                {{ $school_histories->firstItem() + $loop->index }}
                                             @else
                                                 {{ $loop->iteration }}
                                             @endif
@@ -139,15 +139,15 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.users.show', $user->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.school-histories.show', $user->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.users.edit', $user->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.school-histories.edit', $user->id) }}">
                                                         <i class="ti ti-pencil me-1"></i> Edit
                                                     </a>
                                                     <form id="form-delete-{{ $user->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.users.destroy', $user->id) }}"
+                                                        action="{{ route('dashboard.admin.master-data.school-histories.destroy', $user->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -172,10 +172,10 @@
                             </tbody>
                         </table>
                     </div>
-                    @if ($users instanceof LengthAwarePaginator && $users->hasPages())
+                    @if ($school_histories instanceof LengthAwarePaginator && $school_histories->hasPages())
                         <div class="overflow-x-auto mt-3 py-1">
                             <div class="d-flex justify-content-center d-md-block w-100 px-3">
-                                {{ $users->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+                                {{ $school_histories->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                             </div>
                         </div>
                     @endif

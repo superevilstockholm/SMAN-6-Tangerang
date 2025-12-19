@@ -40,7 +40,6 @@ class UserController extends Controller
                         $start_date = Carbon::parse($start_date)->startOfDay();
                         $query->where('created_at', '>=', $start_date);
                     }
-
                     if ($end_date) {
                         $end_date = Carbon::parse($end_date)->endOfDay();
                         $query->where('created_at', '<=', $end_date);

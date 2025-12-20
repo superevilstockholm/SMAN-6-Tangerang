@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <input type="number" name="end_year" class="form-control @error('end_year') is-invalid @enderror"
-                                id="floatingInputEndYear" placeholder="Tahun Mulai" value="{{ old('end_year') }}" required>
+                                id="floatingInputEndYear" placeholder="Tahun Mulai" value="{{ old('end_year') }}">
                             <label for="floatingInputEndYear">Tahun Selesai</label>
                             @error('end_year')
                                 <div class="invalid-feedback">{{ $message }}</div>

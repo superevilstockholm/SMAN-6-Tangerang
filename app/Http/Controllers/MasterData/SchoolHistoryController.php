@@ -39,14 +39,26 @@ class SchoolHistoryController extends Controller
                 } if ($type === 'history_year') {
                     $start_year = $request->query('start_year');
                     $end_year = $request->query('end_year');
-                    if ($start_year) {
-                        $query->where('start_year', '>=', $start_year);
-                    }
-                    if ($end_year) {
-                        $query->where(function($q) use ($end_year) {
-                            $q->where('end_year', '<=', $end_year)
-                                ->orWhereNull('end_year');
+                    if ($start_year && $end_year) {
+                        $query->where(function($q) use ($start_year, $end_year) {
+                            $q->where(function($inner) use ($start_year, $end_year) {
+                                $inner->where('start_year', '<=', $end_year)
+                                    ->where(function($sub) use ($start_year) {
+                                        $sub->where('end_year', '>=', $start_year)
+                                            ->orWhereNull('end_year');
+                                    });
+                            });
                         });
+                    } else {
+                        if ($start_year) {
+                            $query->where(function($q) use ($start_year) {
+                                $q->where('end_year', '>=', $start_year)
+                                ->orWhereNull('end_year');
+                            });
+                        }
+                        if ($end_year) {
+                            $query->where('start_year', '<=', $end_year);
+                        }
                     }
                 } else {
                     $search = $request->query('search');

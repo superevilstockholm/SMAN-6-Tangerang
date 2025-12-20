@@ -143,9 +143,18 @@ class SchoolHistoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SchoolHistory $schoolHistory)
+    public function show(SchoolHistory $schoolHistory): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.school-history.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'school_history' => $schoolHistory
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 
     /**

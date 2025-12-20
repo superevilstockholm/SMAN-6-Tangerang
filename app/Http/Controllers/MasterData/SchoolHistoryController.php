@@ -161,17 +161,59 @@ class SchoolHistoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SchoolHistory $schoolHistory)
+    public function edit(SchoolHistory $schoolHistory): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.school-history.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'school_history' => $schoolHistory
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SchoolHistory $schoolHistory)
+    public function update(Request $request, SchoolHistory $schoolHistory): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+                'start_year' => 'required|numeric',
+                'end_year' => 'nullable|numeric',
+            ], [
+                'title.required' => 'Kolom title wajib di isi.',
+                'title.string' => 'Format title tidak sesuai.',
+                'title.max' => 'Panjang title maksimal :max karakter.',
+                'description.required' => 'Kolom description wajib di isi.',
+                'description.string' => 'Format description tidak sesuai.',
+                'image.image' => 'Format gambar tidak sesuai.',
+                'image.mimes' => 'Format gambar tidak diperbolehkan.',
+                'image.max' => 'Ukuran gambar maksimal :max KB.',
+                'start_year.required' => 'Kolom start year wajib di isi.',
+                'start_year.numeric' => 'Format start year tidak sesuai.',
+                'end_year.numeric' => 'Format end year tidak sesuai.',
+            ]);
+            if ($request->hasFile('image')) {
+                if ($schoolHistory->image_path) {
+                    Storage::disk('public')->delete($schoolHistory->image_path);
+                }
+                $validated['image_path'] = $request
+                    ->file('image')
+                    ->store('school-history', 'public');
+            }
+            unset($validated['image']);
+            $schoolHistory->update($validated);
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History updated successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

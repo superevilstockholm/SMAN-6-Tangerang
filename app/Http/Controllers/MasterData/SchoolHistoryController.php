@@ -23,7 +23,6 @@ class SchoolHistoryController extends Controller
         try {
             $limit = $request->query('limit', 10);
             $query = SchoolHistory::query()->orderBy('created_at', 'desc');
-
             // Search
             $allowed_types = ['title', 'description', 'history_year', 'created_date'];
             $type = $request->query('type');
@@ -70,12 +69,10 @@ class SchoolHistoryController extends Controller
                     }
                 }
             }
-
             $school_histories = $limit === 'all'
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
-
             return view('pages.dashboard.admin.master-data.school-history.index', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
@@ -187,6 +184,7 @@ class SchoolHistoryController extends Controller
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
                 'start_year' => 'required|numeric',
                 'end_year' => 'nullable|numeric',
+                'delete_image' => 'nullable|boolean',
             ], [
                 'title.required' => 'Kolom title wajib di isi.',
                 'title.string' => 'Format title tidak sesuai.',
@@ -199,6 +197,7 @@ class SchoolHistoryController extends Controller
                 'start_year.required' => 'Kolom start year wajib di isi.',
                 'start_year.numeric' => 'Format start year tidak sesuai.',
                 'end_year.numeric' => 'Format end year tidak sesuai.',
+                'delete_image.boolean' => 'Format remove_image tidak sesuai.',
             ]);
             if ($request->hasFile('image')) {
                 if ($schoolHistory->image_path) {
@@ -207,8 +206,13 @@ class SchoolHistoryController extends Controller
                 $validated['image_path'] = $request
                     ->file('image')
                     ->store('school-history', 'public');
+            } else if ($request->input('delete_image')) {
+                if ($schoolHistory->image_path) {
+                    Storage::disk('public')->delete($schoolHistory->image_path);
+                }
+                $validated['image_path'] = null;
             }
-            unset($validated['image']);
+            unset($validated['image'], $validated['remove_image']);
             $schoolHistory->update($validated);
             return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History updated successfully.');
         } catch (Throwable $e) {
@@ -225,9 +229,7 @@ class SchoolHistoryController extends Controller
             if ($schoolHistory->image_path) {
                 Storage::disk('public')->delete($schoolHistory->image_path);
             }
-
             $schoolHistory->delete();
-
             return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History deleted successfully.');
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());

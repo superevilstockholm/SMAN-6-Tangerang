@@ -33,6 +33,15 @@
                         <div class="mb-3">
                             <p class="form-label">Gambar Pendukung Aktif</p>
                             <img class="w-100 object-fit-cover rounded" style="height: 250px; object-position: 50% 25%;" src="{{ $school_history->image_path_url }}" alt="{{ $school_history->title ?? '-' }}">
+                            @if($school_history->image_path)
+                                <div class="form-check mt-3 d-flex align-items-center gap-2">
+                                    <input class="form-check-input" type="checkbox" name="delete_image"
+                                        id="deleteImage" value="1">
+                                    <label class="form-check-label text-danger p-0 m-0" for="deleteImage">
+                                        <i class="ti ti-trash me-1 py-0 my-0 text-danger"></i> Hapus foto profil
+                                    </label>
+                                </div>
+                            @endif
                         </div>
                         <div class="mb-4">
                             <label for="image" class="form-label">Gambar Pendukung Baru (Opsional)</label>

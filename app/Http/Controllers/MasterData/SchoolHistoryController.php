@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\MasterData\SchoolHistory;
@@ -176,8 +177,18 @@ class SchoolHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SchoolHistory $schoolHistory)
+    public function destroy(SchoolHistory $schoolHistory): RedirectResponse
     {
-        //
+        try {
+            if ($schoolHistory->image_path) {
+                Storage::disk('public')->delete($schoolHistory->image_path);
+            }
+
+            $schoolHistory->delete();
+
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History deleted successfully.');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 }

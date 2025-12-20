@@ -169,3 +169,7 @@ input:-webkit-autofill:active {
 .hide-arrow::before, .hide-arrow::after {
     display: none !important;
 }
+
+.pagination {
+    margin-bottom: 0 !important;
+}

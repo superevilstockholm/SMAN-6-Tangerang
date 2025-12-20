@@ -105,8 +105,8 @@
                             </a>
                         </div>
                     </form>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle">
+                    <div class="table-responsive @if (!($users instanceof LengthAwarePaginator && $users->hasPages())) mb-0 @else mb-3 @endif">
+                        <table class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -164,7 +164,7 @@
                                     <tr>
                                         <td colspan="6" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
-                                                Tidak ada pengguna yang ditemukan dengan kriteria tersebut.
+                                                Tidak ada data pengguna yang ditemukan dengan kriteria tersebut.
                                             </div>
                                         </td>
                                     </tr>
@@ -173,7 +173,7 @@
                         </table>
                     </div>
                     @if ($users instanceof LengthAwarePaginator && $users->hasPages())
-                        <div class="overflow-x-auto mt-3 py-1">
+                        <div class="overflow-x-auto mt-0 py-1">
                             <div class="d-flex justify-content-center d-md-block w-100 px-3">
                                 {{ $users->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                             </div>

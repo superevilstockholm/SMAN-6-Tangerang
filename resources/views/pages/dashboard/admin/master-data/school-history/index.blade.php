@@ -1,11 +1,12 @@
 @extends('layouts.dashboard')
-@section('title', 'Data Pengguna - SMAN 6 Tangerang')
-@section('meta-description', 'Daftar data pengguna SMAN 6 Tangerang')
-@section('meta-keywords', 'master data, data pengguna, data user, user, pengguna, sman 6, sman 6 tangerang')
+@section('title', 'Data Sejarah Sekolah - SMAN 6 Tangerang')
+@section('meta-description', 'Daftar data Sejarah Sekolah SMAN 6 Tangerang')
+@section('meta-keywords', 'master data, data sejarah sekolah, data school history, history, sekolah, sman 6, sman 6 tangerang')
 @section('content')
     <x-alerts :errors="$errors" />
     @php
         use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+        use Illuminate\Support\Str;
     @endphp
     <div class="row mb-4">
         <div class="col">
@@ -13,13 +14,13 @@
                 <div
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
-                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Pengguna</h3>
-                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data pengguna.</p>
+                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Sejarah Sekolah</h3>
+                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data sejarah sekolah.</p>
                     </div>
                     <div class="d-flex align-items-center">
                         <a href="{{ route('dashboard.admin.master-data.school-histories.create') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
-                            <i class="ti ti-plus me-1"></i> Tambah Pengguna
+                            <i class="ti ti-plus me-1"></i> Tambah Sejarah
                         </a>
                     </div>
                 </div>
@@ -63,10 +64,10 @@
                             <div class="form-floating" style="min-width: 180px;">
                                 @php
                                     $filterTypes = [
-                                        'name' => 'Nama',
-                                        'email' => 'Email',
-                                        'role' => 'Role',
-                                        'date' => 'Tanggal Dibuat',
+                                        'title' => 'Judul',
+                                        'description' => 'Deskripsi',
+                                        'history_year' => 'Tahun Sejarah',
+                                        'created_date' => 'Tanggal Dibuat',
                                     ];
                                     $currentType = request('type') ?: array_key_first($filterTypes);
                                 @endphp
@@ -79,13 +80,26 @@
                                 </select>
                                 <label for="filterType">Filter berdasarkan</label>
                             </div>
-                            {{-- Input Text for Name/Email --}}
+                            {{-- Input Text for Title/Description --}}
                             <div class="form-floating flex-grow-1" id="filterTextWrapper">
                                 <input type="text" name="search" class="form-control form-control-sm"
                                     id="filterTextInput" placeholder="Masukan kata kunci" value="{{ request('search') }}">
                                 <label for="filterTextInput">Masukan kata kunci</label>
                             </div>
-                            {{-- Date Fields --}}
+                            {{-- Year Fields for history_year --}}
+                            <div class="form-floating flex-grow-1 d-none" id="filterStartYearWrapper">
+                                <input type="number" name="start_year" class="form-control form-control-sm"
+                                    id="filterStartYear" placeholder="Tahun Mulai"
+                                    value="{{ request('start_year') }}" min="1900" max="2100" step="1">
+                                <label for="filterStartYear">Tahun Mulai</label>
+                            </div>
+                            <div class="form-floating flex-grow-1 d-none" id="filterEndYearWrapper">
+                                <input type="number" name="end_year" class="form-control form-control-sm"
+                                    id="filterEndYear" placeholder="Tahun Akhir"
+                                    value="{{ request('end_year') }}" min="1900" max="2100" step="1">
+                                <label for="filterEndYear">Tahun Akhir</label>
+                            </div>
+                            {{-- Date Fields for created_date --}}
                             <div class="form-floating flex-grow-1 d-none" id="filterStartDateWrapper">
                                 <input type="date" name="start_date" class="form-control form-control-sm"
                                     id="filterStartDate" value="{{ request('start_date') }}">
@@ -105,20 +119,20 @@
                             </a>
                         </div>
                     </form>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle">
+                    <div class="table-responsive @if (!($school_histories instanceof LengthAwarePaginator && $school_histories->hasPages())) mb-0 @else mb-3 @endif">
+                        <table class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
+                                    <th>Judul</th>
+                                    <th>Deskripsi</th>
+                                    <th>Tahun</th>
                                     <th>Dibuat Pada</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($school_histories as $index => $user)
+                                @forelse ($school_histories as $index => $school_history)
                                     <tr>
                                         <td class="text-center">
                                             @if ($school_histories instanceof LengthAwarePaginator)
@@ -127,10 +141,19 @@
                                                 {{ $loop->iteration }}
                                             @endif
                                         </td>
-                                        <td>{{ $user->name ? ucwords(strtolower($user->name)) : '-' }}</td>
-                                        <td>{{ $user->email ?? '-' }}</td>
-                                        <td>{{ $user->role?->value ? ucwords(strtolower($user->role->value)) : '-' }}</td>
-                                        <td>{{ $user->created_at?->format('d M Y H:i') }}</td>
+                                        <td>{{ $school_history->title ?? '-' }}</td>
+                                        <td>{{ $school_history->description ? Str::limit($school_history->description, 50, '...') : '-' }}</td>
+                                        <td>
+                                            @if ($school_history->start_year)
+                                                {{ $school_history->start_year }}
+                                                @if ($school_history->end_year)
+                                                    - {{ $school_history->end_year }}
+                                                @endif
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>{{ $school_history->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button" class="btn border-0 p-0 dropdown-toggle hide-arrow"
@@ -139,20 +162,20 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.school-histories.show', $user->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.school-histories.show', $school_history->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.school-histories.edit', $user->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.school-histories.edit', $school_history->id) }}">
                                                         <i class="ti ti-pencil me-1"></i> Edit
                                                     </a>
-                                                    <form id="form-delete-{{ $user->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.school-histories.destroy', $user->id) }}"
+                                                    <form id="form-delete-{{ $school_history->id }}"
+                                                        action="{{ route('dashboard.admin.master-data.school-histories.destroy', $school_history->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+                                                            data-id="{{ $school_history->id }}" data-name="{{ $school_history->name }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -164,7 +187,7 @@
                                     <tr>
                                         <td colspan="6" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
-                                                Tidak ada pengguna yang ditemukan dengan kriteria tersebut.
+                                                Tidak ada data sejarah sekolah yang ditemukan dengan kriteria tersebut.
                                             </div>
                                         </td>
                                     </tr>
@@ -173,7 +196,7 @@
                         </table>
                     </div>
                     @if ($school_histories instanceof LengthAwarePaginator && $school_histories->hasPages())
-                        <div class="overflow-x-auto mt-3 py-1">
+                        <div class="overflow-x-auto mt-0 py-1">
                             <div class="d-flex justify-content-center d-md-block w-100 px-3">
                                 {{ $school_histories->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                             </div>
@@ -185,14 +208,40 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.getElementById('filterType');
+            const textInputWrapper = document.getElementById('filterTextWrapper');
+            const startYearWrapper = document.getElementById('filterStartYearWrapper');
+            const endYearWrapper = document.getElementById('filterEndYearWrapper');
+            const startDateWrapper = document.getElementById('filterStartDateWrapper');
+            const endDateWrapper = document.getElementById('filterEndDateWrapper');
+            function updateFilterFields() {
+                const value = typeSelect.value;
+                textInputWrapper.classList.add('d-none');
+                startYearWrapper.classList.add('d-none');
+                endYearWrapper.classList.add('d-none');
+                startDateWrapper.classList.add('d-none');
+                endDateWrapper.classList.add('d-none');
+                if (value === 'history_year') {
+                    startYearWrapper.classList.remove('d-none');
+                    endYearWrapper.classList.remove('d-none');
+                } else if (value === 'created_date') {
+                    startDateWrapper.classList.remove('d-none');
+                    endDateWrapper.classList.remove('d-none');
+                } else {
+                    textInputWrapper.classList.remove('d-none');
+                }
+            }
+            updateFilterFields();
+            typeSelect.addEventListener('change', updateFilterFields);
+        });
+        document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const userId = this.getAttribute('data-id');
-                    const userName = this.getAttribute('data-name');
+                    const historyId = this.getAttribute('data-id');
+                    const historyTitle = this.getAttribute('data-title');
                     Swal.fire({
-                        title: "Hapus Pengguna?",
-                        text: "Apakah Anda yakin ingin menghapus pengguna " + userName +
-                            "?",
+                        title: "Hapus Sejarah Sekolah?",
+                        text: "Apakah Anda yakin ingin menghapus sejarah sekolah \"" + historyTitle + "\"?",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -201,37 +250,11 @@
                         cancelButtonText: "Batal"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.getElementById('form-delete-' + userId).submit();
+                            document.getElementById('form-delete-' + historyId).submit();
                         }
                     });
                 });
             });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const typeSelect = document.getElementById('filterType');
-            const textInputWrapper = document.getElementById('filterTextWrapper');
-            const startDateWrapper = document.getElementById('filterStartDateWrapper');
-            const endDateWrapper = document.getElementById('filterEndDateWrapper');
-            function updateFilterFields() {
-                const value = typeSelect.value;
-                if (!value) {
-                    textInputWrapper.classList.remove('d-none');
-                    startDateWrapper.classList.add('d-none');
-                    endDateWrapper.classList.add('d-none');
-                    return;
-                }
-                if (value === 'date') {
-                    textInputWrapper.classList.add('d-none');
-                    startDateWrapper.classList.remove('d-none');
-                    endDateWrapper.classList.remove('d-none');
-                } else {
-                    textInputWrapper.classList.remove('d-none');
-                    startDateWrapper.classList.add('d-none');
-                    endDateWrapper.classList.add('d-none');
-                }
-            }
-            updateFilterFields();
-            typeSelect.addEventListener('change', updateFilterFields);
         });
     </script>
 @endsection

@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         try {
             $limit = $request->query('limit', 10);
-            $query = User::query();
+            $query = User::query()->orderBy('created_at', 'desc');
 
             // Search
             $allowed_types = ['name', 'email', 'role', 'date'];

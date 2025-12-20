@@ -191,8 +191,7 @@
                     const userName = this.getAttribute('data-name');
                     Swal.fire({
                         title: "Hapus Pengguna?",
-                        text: "Apakah Anda yakin ingin menghapus pengguna " + userName +
-                            "?",
+                        text: "Apakah Anda yakin ingin menghapus pengguna \"" + userName + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",

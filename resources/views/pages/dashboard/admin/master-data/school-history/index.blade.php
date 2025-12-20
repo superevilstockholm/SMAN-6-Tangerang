@@ -175,7 +175,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $school_history->id }}" data-name="{{ $school_history->name }}">
+                                                            data-id="{{ $school_history->id }}" data-title="{{ $school_history->title }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -241,7 +241,7 @@
                     const historyTitle = this.getAttribute('data-title');
                     Swal.fire({
                         title: "Hapus Sejarah Sekolah?",
-                        text: "Apakah Anda yakin ingin menghapus sejarah sekolah \"" + historyTitle + "\"?",
+                        text: "Apakah Anda yakin ingin menghapus sejarah sekolah \"" + historyTitle + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",

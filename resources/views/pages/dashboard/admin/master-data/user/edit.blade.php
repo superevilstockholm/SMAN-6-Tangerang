@@ -36,6 +36,15 @@
                         <div class="mb-3">
                             <p class="form-label">Foto Profil Aktif</p>
                             <img class="object-fit-cover rounded" style="height: 150px; width: 150px;" src="{{ $user->profile_picture_path_url }}" alt="{{ $user->name ?? '-' }}">
+                            @if($user->profile_picture_path)
+                                <div class="form-check mt-3 d-flex align-items-center gap-2">
+                                    <input class="form-check-input" type="checkbox" name="delete_profile_picture"
+                                        id="deleteProfilePicture" value="1">
+                                    <label class="form-check-label text-danger p-0 m-0" for="deleteProfilePicture">
+                                        <i class="ti ti-trash me-1 py-0 my-0 text-danger"></i> Hapus foto profil
+                                    </label>
+                                </div>
+                            @endif
                         </div>
                         <div class="mb-4">
                             <label for="profile_picture_image" class="form-label">Foto Profil Baru (Opsional)</label>

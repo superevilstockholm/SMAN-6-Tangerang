@@ -4,8 +4,11 @@ namespace App\Http\Controllers\MasterData;
 
 use Throwable;
 use Carbon\Carbon;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\MasterData\SchoolHistory;
@@ -15,12 +18,11 @@ class SchoolHistoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): View | RedirectResponse
     {
         try {
             $limit = $request->query('limit', 10);
-            $query = SchoolHistory::query();
-
+            $query = SchoolHistory::query()->orderBy('created_at', 'desc');
             // Search
             $allowed_types = ['title', 'description', 'history_year', 'created_date'];
             $type = $request->query('type');
@@ -67,12 +69,10 @@ class SchoolHistoryController extends Controller
                     }
                 }
             }
-
             $school_histories = $limit === 'all'
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
-
             return view('pages.dashboard.admin.master-data.school-history.index', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
@@ -80,55 +80,159 @@ class SchoolHistoryController extends Controller
                 'school_histories' => $school_histories,
             ]);
         } catch (Throwable $e) {
-            return redirect()->route('dashboard.admin.master-data.school-history.index')->withErrors($e->getMessage());
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
         }
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.school-history.create', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+                'start_year' => 'required|numeric',
+                'end_year' => 'nullable|numeric',
+            ], [
+                'title.required' => 'Kolom title wajib di isi.',
+                'title.string' => 'Format title tidak sesuai.',
+                'title.max' => 'Panjang title maksimal :max karakter.',
+                'description.required' => 'Kolom description wajib di isi.',
+                'description.string' => 'Format description tidak sesuai.',
+                'image.image' => 'Format gambar tidak sesuai.',
+                'image.mimes' => 'Format gambar tidak diperbolehkan.',
+                'image.max' => 'Ukuran gambar maksimal :max KB.',
+                'start_year.required' => 'Kolom start year wajib di isi.',
+                'start_year.numeric' => 'Format start year tidak sesuai.',
+                'end_year.numeric' => 'Format end year tidak sesuai.',
+            ]);
+            if ($request->hasFile('image')) {
+                $validated['image_path'] = $request
+                    ->file('image')
+                    ->store('school-history', 'public');
+            }
+            unset($validated['image']);
+            SchoolHistory::create($validated);
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History created successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SchoolHistory $schoolHistory)
+    public function show(SchoolHistory $schoolHistory): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.school-history.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'school_history' => $schoolHistory
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(SchoolHistory $schoolHistory)
+    public function edit(SchoolHistory $schoolHistory): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.school-history.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'school_history' => $schoolHistory
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SchoolHistory $schoolHistory)
+    public function update(Request $request, SchoolHistory $schoolHistory): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+                'start_year' => 'required|numeric',
+                'end_year' => 'nullable|numeric',
+                'delete_image' => 'nullable|boolean',
+            ], [
+                'title.required' => 'Kolom title wajib di isi.',
+                'title.string' => 'Format title tidak sesuai.',
+                'title.max' => 'Panjang title maksimal :max karakter.',
+                'description.required' => 'Kolom description wajib di isi.',
+                'description.string' => 'Format description tidak sesuai.',
+                'image.image' => 'Format gambar tidak sesuai.',
+                'image.mimes' => 'Format gambar tidak diperbolehkan.',
+                'image.max' => 'Ukuran gambar maksimal :max KB.',
+                'start_year.required' => 'Kolom start year wajib di isi.',
+                'start_year.numeric' => 'Format start year tidak sesuai.',
+                'end_year.numeric' => 'Format end year tidak sesuai.',
+                'delete_image.boolean' => 'Format remove_image tidak sesuai.',
+            ]);
+            if ($request->hasFile('image')) {
+                if ($schoolHistory->image_path) {
+                    Storage::disk('public')->delete($schoolHistory->image_path);
+                }
+                $validated['image_path'] = $request
+                    ->file('image')
+                    ->store('school-history', 'public');
+            } else if ($request->input('delete_image')) {
+                if ($schoolHistory->image_path) {
+                    Storage::disk('public')->delete($schoolHistory->image_path);
+                }
+                $validated['image_path'] = null;
+            }
+            unset($validated['image'], $validated['remove_image']);
+            $schoolHistory->update($validated);
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History updated successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SchoolHistory $schoolHistory)
+    public function destroy(SchoolHistory $schoolHistory): RedirectResponse
     {
-        //
+        try {
+            if ($schoolHistory->image_path) {
+                Storage::disk('public')->delete($schoolHistory->image_path);
+            }
+            $schoolHistory->delete();
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History deleted successfully.');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.school-histories.index')->withErrors($e->getMessage());
+        }
     }
 }

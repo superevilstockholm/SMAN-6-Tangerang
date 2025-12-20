@@ -27,8 +27,7 @@ class UserController extends Controller
     {
         try {
             $limit = $request->query('limit', 10);
-            $query = User::query();
-
+            $query = User::query()->orderBy('created_at', 'desc');
             // Search
             $allowed_types = ['name', 'email', 'role', 'date'];
             $type = $request->query('type');
@@ -51,12 +50,10 @@ class UserController extends Controller
                     }
                 }
             }
-
             $users = $limit === 'all'
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
-
             return view('pages.dashboard.admin.master-data.user.index', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
@@ -114,19 +111,14 @@ class UserController extends Controller
                 'profile_picture_image.mimes' => 'Format gambar tidak diperbolehkan.',
                 'profile_picture_image.max' => 'Ukuran gambar maksimal :max KB.',
             ]);
-
             $validated['password'] = Hash::make($validated['password']);
-
             if ($request->hasFile('profile_picture_image')) {
                 $validated['profile_picture_path'] = $request
                     ->file('profile_picture_image')
                     ->store('profile-pictures', 'public');
             }
-
             unset($validated['profile_picture_image']);
-
             User::create($validated);
-
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User created successfully.');
         } catch (Throwable $e) {
             return back()->withErrors($e->getMessage())->withInput();
@@ -197,18 +189,15 @@ class UserController extends Controller
                 'profile_picture_image.max' => 'Ukuran gambar maksimal :max KB.',
                 'delete_profile_picture.boolean' => 'Format delete_profile_picture tidak sesuai.',
             ]);
-
             if (empty($validated['password'])) {
                 unset($validated['password']);
             } else {
                 $validated['password'] = Hash::make($validated['password']);
             }
-
             if ($request->hasFile('profile_picture_image')) {
                 if ($user->profile_picture_path) {
                     Storage::disk('public')->delete($user->profile_picture_path);
                 }
-
                 $validated['profile_picture_path'] = $request
                     ->file('profile_picture_image')
                     ->store('profile-pictures', 'public');
@@ -216,14 +205,10 @@ class UserController extends Controller
                 if ($user->profile_picture_path) {
                     Storage::disk('public')->delete($user->profile_picture_path);
                 }
-
                 $validated['profile_picture_path'] = null;
             }
-
             unset($validated['profile_picture_image'], $validated['delete_profile_picture']);
-
             $user->update($validated);
-
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User updated successfully.');
         } catch (Throwable $e) {
             return back()->withErrors($e->getMessage())->withInput();
@@ -239,9 +224,7 @@ class UserController extends Controller
             if ($user->profile_picture_path) {
                 Storage::disk('public')->delete($user->profile_picture_path);
             }
-
             $user->delete();
-
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User deleted successfully.');
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.master-data.users.index')->withErrors($e->getMessage());

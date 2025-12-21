@@ -38,7 +38,7 @@
                                     <input class="form-check-input" type="checkbox" name="delete_image"
                                         id="deleteImage" value="1">
                                     <label class="form-check-label text-danger p-0 m-0" for="deleteImage">
-                                        <i class="ti ti-trash me-1 py-0 my-0 text-danger"></i> Hapus foto profil
+                                        <i class="ti ti-trash me-1 py-0 my-0 text-danger"></i> Hapus gambar pendukung
                                     </label>
                                 </div>
                             @endif
@@ -107,11 +107,10 @@
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Petunjuk Edit</h4>
                     <ul class="text-muted small ps-3">
-                        <li>Nama dan Email wajib diisi.</li>
-                        <li>Email harus unik (tidak boleh sama dengan email pengguna lain, kecuali email pengguna ini
-                            sendiri).</li>
-                        <li>Kolom Kata Sandi Baru bersifat opsional. Jika dikosongkan, password lama tidak akan diubah.</li>
-                        <li>Validasi password yang ketat tetap berlaku jika kolom password diisi.</li>
+                        <li>Judul, Deskripsi, dan Tahun Mulai wajib diisi.</li>
+                        <li>Gambar Pendukung dan Tahun Selesai bersifat opsional.</li>
+                        <li>Biarkan gambar kosong jika tidak ingin mengubah gambar pendukung.</li>
+                        <li>Centang pilihan "Hapus Gambar Pendukung" jika ingin menghapus gambar pendukung.</li>
                     </ul>
                 </div>
             </div>

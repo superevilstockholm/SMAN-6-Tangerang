@@ -64,17 +64,41 @@ class VisionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.visions.create', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ]
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.visions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'is_active' => 'nullable|boolean',
+            ], [
+                'content.required' => 'Kolom content wajib di isi.',
+                'content.string' => 'Format content tidak sesuai.',
+                'is_active.boolean' => 'Format is_active tidak sesuai.',
+            ]);
+            if (!empty($validated['is_active'])) {
+                Vision::where('is_active', true)->update(['is_active' => false]);
+            }
+            Vision::create($validated);
+            return redirect()->route('dashboard.admin.master-data.visions.index')->with('success', 'Vision created successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

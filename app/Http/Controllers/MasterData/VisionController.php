@@ -104,9 +104,18 @@ class VisionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vision $vision)
+    public function show(Vision $vision): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.visions.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'vision' => $vision
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.visions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 
 // Master Data Controllers
 use App\Http\Controllers\MasterData\UserController;
+use App\Http\Controllers\MasterData\VisionController;
 use App\Http\Controllers\MasterData\SchoolHistoryController;
 
 Route::get('/', function () {
@@ -36,6 +37,9 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
                 ]);
                 Route::resource('school-histories', SchoolHistoryController::class)->parameters([
                     'school-histories' => 'schoolHistory'
+                ]);
+                Route::resource('visions', VisionController::class)->parameters([
+                    'visions' => 'vision'
                 ]);
             });
         });

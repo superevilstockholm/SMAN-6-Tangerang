@@ -121,17 +121,42 @@ class VisionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Vision $vision)
+    public function edit(Vision $vision): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.visions.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'vision' => $vision
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.visions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Vision $vision)
+    public function update(Request $request, Vision $vision): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'is_active' => 'nullable|boolean',
+            ], [
+                'content.required' => 'Kolom content wajib di isi.',
+                'content.string' => 'Format content tidak sesuai.',
+                'is_active.boolean' => 'Format is_active tidak sesuai.',
+            ]);
+            if (!empty($validated['is_active'])) {
+                Vision::where('is_active', true)->update(['is_active' => false]);
+            }
+            $vision->update($validated);
+            return redirect()->route('dashboard.admin.master-data.visions.index')->with('success', 'Vision updated successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

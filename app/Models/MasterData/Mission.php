@@ -4,16 +4,16 @@ namespace App\Models\MasterData;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vision extends Model
+class Mission extends Model
 {
-    protected $table = 'visions';
+    protected $table = 'missions';
 
     protected $fillable = [
         'content',
-        'is_active',
+        'item_order',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'item_order' => 'integer',
     ];
 }

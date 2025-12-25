@@ -126,7 +126,7 @@
                                             @endif
                                         </td>
                                         <td>{{ $mission->content ? Str::limit($mission->content, 50, '...') : '-' }}</td>
-                                        <td>{{ $mission->order ?? '-' }}</td>
+                                        <td>{{ $mission->item_order ?? '-' }}</td>
                                         <td>{{ $mission->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">

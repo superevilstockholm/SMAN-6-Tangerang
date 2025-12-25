@@ -6,6 +6,7 @@ use Throwable;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
@@ -14,6 +15,21 @@ use App\Models\MasterData\Mission;
 
 class MissionController extends Controller
 {
+    private function normalizeOrder(): void
+    {
+        $missions = Mission::orderBy('item_order')
+            ->orderBy('id')
+            ->get(['id']);
+        DB::transaction(function () use ($missions) {
+            foreach ($missions as $index => $mission) {
+                Mission::where('id', $mission->id)
+                    ->update([
+                        'item_order' => $index + 1,
+                    ]);
+            }
+        });
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -63,48 +79,122 @@ class MissionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View | RedirectResponse
     {
-        //
+        $total = Mission::count();
+        $orders = range(1, $total + 1);
+        return view('pages.dashboard.admin.master-data.missions.create', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'orders' => $orders,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'item_order' => 'required|integer|min:1',
+            ]);
+            DB::transaction(function () use ($validated) {
+                Mission::where('item_order', '>=', $validated['item_order'])
+                    ->increment('item_order');
+                Mission::create($validated);
+                $this->normalizeOrder();
+            });
+            return redirect()
+                ->route('dashboard.admin.master-data.missions.index')
+                ->with('success', 'Mission berhasil ditambahkan');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Mission $mission)
+    public function show(Mission $mission): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.missions.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'mission' => $mission
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Mission $mission)
+    public function edit(Mission $mission): View | RedirectResponse
     {
-        //
+        try {
+            $total = Mission::count();
+            return view('pages.dashboard.admin.master-data.missions.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'mission' => $mission,
+                'orders' => range(1, $total),
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mission $mission)
+    public function update(Request $request, Mission $mission): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'item_order' => 'required|integer|min:1',
+            ]);
+            DB::transaction(function () use ($validated, $mission) {
+                $oldOrder = $mission->item_order;
+                $newOrder = $validated['item_order'];
+                if ($oldOrder !== $newOrder) {
+                    if ($newOrder > $oldOrder) {
+                        Mission::whereBetween('item_order', [$oldOrder + 1, $newOrder])
+                            ->decrement('item_order');
+                    } else {
+                        Mission::whereBetween('item_order', [$newOrder, $oldOrder - 1])
+                            ->increment('item_order');
+                    }
+                }
+                $mission->update($validated);
+                $this->normalizeOrder();
+            });
+            return redirect()->route('dashboard.admin.master-data.missions.index')->with('success', 'Mission berhasil diperbarui');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mission $mission)
+    public function destroy(Mission $mission): RedirectResponse
     {
-        //
+        try {
+            DB::transaction(function () use ($mission) {
+                $mission->delete();
+                $this->normalizeOrder();
+            });
+            return redirect()->route('dashboard.admin.master-data.missions.index')->with('success', 'Mission berhasil dihapus');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 }

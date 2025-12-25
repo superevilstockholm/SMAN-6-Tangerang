@@ -6,6 +6,7 @@ use Throwable;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
@@ -14,6 +15,21 @@ use App\Models\MasterData\Mission;
 
 class MissionController extends Controller
 {
+    private function normalizeOrder(): void
+    {
+        $missions = Mission::orderBy('item_order')
+            ->orderBy('id')
+            ->get(['id']);
+        DB::transaction(function () use ($missions) {
+            foreach ($missions as $index => $mission) {
+                Mission::where('id', $mission->id)
+                    ->update([
+                        'item_order' => $index + 1,
+                    ]);
+            }
+        });
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -65,7 +81,14 @@ class MissionController extends Controller
      */
     public function create()
     {
-        //
+        $total = Mission::count();
+        $orders = range(1, $total + 1);
+        return view('pages.dashboard.admin.master-data.missions.create', [
+            'meta' => [
+                'sidebarItems' => adminSidebarItems(),
+            ],
+            'orders' => $orders,
+        ]);
     }
 
     /**
@@ -73,7 +96,23 @@ class MissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'item_order' => 'required|integer|min:1',
+            ]);
+            DB::transaction(function () use ($validated) {
+                Mission::where('item_order', '>=', $validated['item_order'])
+                    ->increment('item_order');
+                Mission::create($validated);
+                $this->normalizeOrder();
+            });
+            return redirect()
+                ->route('dashboard.admin.master-data.missions.index')
+                ->with('success', 'Mission berhasil ditambahkan');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

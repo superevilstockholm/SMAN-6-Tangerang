@@ -144,6 +144,16 @@ class MissionController extends Controller
      */
     public function destroy(Mission $mission)
     {
-        //
+        try {
+            DB::transaction(function () use ($mission) {
+                $mission->delete();
+                $this->normalizeOrder();
+            });
+            return redirect()
+                ->route('dashboard.admin.master-data.missions.index')
+                ->with('success', 'Mission berhasil dihapus');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 }

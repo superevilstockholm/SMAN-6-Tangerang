@@ -120,7 +120,16 @@ class MissionController extends Controller
      */
     public function show(Mission $mission)
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.missions.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'mission' => $mission
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -142,16 +151,14 @@ class MissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mission $mission)
+    public function destroy(Mission $mission): RedirectResponse
     {
         try {
             DB::transaction(function () use ($mission) {
                 $mission->delete();
                 $this->normalizeOrder();
             });
-            return redirect()
-                ->route('dashboard.admin.master-data.missions.index')
-                ->with('success', 'Mission berhasil dihapus');
+            return redirect()->route('dashboard.admin.master-data.missions.index')->with('success', 'Mission berhasil dihapus');
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
         }

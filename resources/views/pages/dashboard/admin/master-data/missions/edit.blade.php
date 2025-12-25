@@ -76,11 +76,11 @@
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Petunjuk Edit</h4>
                     <ul class="text-muted small ps-3">
-                        <li>Nama dan Email wajib diisi.</li>
-                        <li>Email harus unik (tidak boleh sama dengan email pengguna lain, kecuali email pengguna ini
-                            sendiri).</li>
-                        <li>Kolom Kata Sandi Baru bersifat opsional. Jika dikosongkan, password lama tidak akan diubah.</li>
-                        <li>Validasi password yang ketat tetap berlaku jika kolom password diisi.</li>
+                        <li>Konten misi wajib diisi dan menggambarkan tujuan sekolah.</li>
+                        <li>Urutan menentukan posisi misi pada tampilan publik.</li>
+                        <li>Perubahan urutan akan menggeser misi lain secara otomatis.</li>
+                        <li>Sistem akan merapikan urutan jika terdapat loncatan angka.</li>
+                        <li>Perubahan disimpan secara permanen setelah menekan tombol Perbarui.</li>
                     </ul>
                 </div>
             </div>

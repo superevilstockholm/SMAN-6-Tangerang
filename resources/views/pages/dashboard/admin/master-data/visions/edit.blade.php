@@ -74,11 +74,11 @@
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Petunjuk Edit</h4>
                     <ul class="text-muted small ps-3">
-                        <li>Nama dan Email wajib diisi.</li>
-                        <li>Email harus unik (tidak boleh sama dengan email pengguna lain, kecuali email pengguna ini
-                            sendiri).</li>
-                        <li>Kolom Kata Sandi Baru bersifat opsional. Jika dikosongkan, password lama tidak akan diubah.</li>
-                        <li>Validasi password yang ketat tetap berlaku jika kolom password diisi.</li>
+                        <li>Konten visi wajib diisi dan mencerminkan arah serta tujuan sekolah.</li>
+                        <li>Hanya satu visi yang dapat dijadikan visi aktif.</li>
+                        <li>Mengaktifkan visi ini akan menonaktifkan visi aktif sebelumnya.</li>
+                        <li>Perubahan akan langsung memengaruhi tampilan visi di halaman publik.</li>
+                        <li>Pastikan konten sudah benar sebelum menyimpan perubahan.</li>
                     </ul>
                 </div>
             </div>

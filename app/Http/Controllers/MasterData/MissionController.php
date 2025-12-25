@@ -79,7 +79,7 @@ class MissionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View | RedirectResponse
     {
         $total = Mission::count();
         $orders = range(1, $total + 1);
@@ -94,7 +94,7 @@ class MissionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         try {
             $validated = $request->validate([
@@ -118,7 +118,7 @@ class MissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mission $mission)
+    public function show(Mission $mission): View | RedirectResponse
     {
         try {
             return view('pages.dashboard.admin.master-data.missions.show', [
@@ -135,17 +135,51 @@ class MissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Mission $mission)
+    public function edit(Mission $mission): View | RedirectResponse
     {
-        //
+        try {
+            $total = Mission::count();
+            return view('pages.dashboard.admin.master-data.missions.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'mission' => $mission,
+                'orders' => range(1, $total),
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.missions.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mission $mission)
+    public function update(Request $request, Mission $mission): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'content' => 'required|string',
+                'item_order' => 'required|integer|min:1',
+            ]);
+            DB::transaction(function () use ($validated, $mission) {
+                $oldOrder = $mission->item_order;
+                $newOrder = $validated['item_order'];
+                if ($oldOrder !== $newOrder) {
+                    if ($newOrder > $oldOrder) {
+                        Mission::whereBetween('item_order', [$oldOrder + 1, $newOrder])
+                            ->decrement('item_order');
+                    } else {
+                        Mission::whereBetween('item_order', [$newOrder, $oldOrder - 1])
+                            ->increment('item_order');
+                    }
+                }
+                $mission->update($validated);
+                $this->normalizeOrder();
+            });
+            return redirect()->route('dashboard.admin.master-data.missions.index')->with('success', 'Mission berhasil diperbarui');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

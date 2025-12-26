@@ -131,6 +131,9 @@ class SchoolHistoryController extends Controller
                     ->store('school-history', 'public');
             }
             unset($validated['image']);
+            if (empty($validated['end_year'])) {
+                unset($validated['end_year']);
+            }
             SchoolHistory::create($validated);
             return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History created successfully.');
         } catch (Throwable $e) {
@@ -213,6 +216,9 @@ class SchoolHistoryController extends Controller
                 $validated['image_path'] = null;
             }
             unset($validated['image'], $validated['remove_image']);
+            if (empty($validated['end_year'])) {
+                unset($validated['end_year']);
+            }
             $schoolHistory->update($validated);
             return redirect()->route('dashboard.admin.master-data.school-histories.index')->with('success', 'School History updated successfully.');
         } catch (Throwable $e) {

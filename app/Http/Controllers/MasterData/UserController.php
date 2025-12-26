@@ -43,6 +43,11 @@ class UserController extends Controller
                         $end_date = Carbon::parse($end_date)->endOfDay();
                         $query->where('created_at', '<=', $end_date);
                     }
+                } else if ($type === 'role') {
+                    $role = $request->query('role');
+                    if ($role && RoleEnum::tryFrom($role)) {
+                        $query->where('role', $role);
+                    }
                 } else {
                     $search = $request->query('search');
                     if ($search) {

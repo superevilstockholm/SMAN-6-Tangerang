@@ -6,6 +6,7 @@
     <x-alerts :errors="$errors" />
     @php
         use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+        use App\Enums\RoleEnum;
     @endphp
     <div class="row mb-4">
         <div class="col">
@@ -84,6 +85,19 @@
                                 <input type="text" name="search" class="form-control form-control-sm"
                                     id="filterTextInput" placeholder="Masukan kata kunci" value="{{ request('search') }}">
                                 <label for="filterTextInput">Masukan kata kunci</label>
+                            </div>
+                            {{-- Select Role --}}
+                            <div class="form-floating flex-grow-1 d-none" id="filterRoleWrapper">
+                                <select name="role" class="form-select form-select-sm">
+                                    <option value="">-- Pilih Role --</option>
+                                    @foreach (RoleEnum::cases() as $role)
+                                        <option value="{{ $role->value }}"
+                                            {{ request('role') === $role->value ? 'selected' : '' }}>
+                                            {{ ucwords(strtolower($role->value)) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label>Pilih Role</label>
                             </div>
                             {{-- Date Fields --}}
                             <div class="form-floating flex-grow-1 d-none" id="filterStartDateWrapper">
@@ -206,27 +220,25 @@
                 });
             });
         });
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const typeSelect = document.getElementById('filterType');
             const textInputWrapper = document.getElementById('filterTextWrapper');
+            const roleWrapper = document.getElementById('filterRoleWrapper');
             const startDateWrapper = document.getElementById('filterStartDateWrapper');
             const endDateWrapper = document.getElementById('filterEndDateWrapper');
             function updateFilterFields() {
                 const value = typeSelect.value;
-                if (!value) {
-                    textInputWrapper.classList.remove('d-none');
-                    startDateWrapper.classList.add('d-none');
-                    endDateWrapper.classList.add('d-none');
-                    return;
-                }
+                textInputWrapper.classList.add('d-none');
+                roleWrapper.classList.add('d-none');
+                startDateWrapper.classList.add('d-none');
+                endDateWrapper.classList.add('d-none');
                 if (value === 'date') {
-                    textInputWrapper.classList.add('d-none');
                     startDateWrapper.classList.remove('d-none');
                     endDateWrapper.classList.remove('d-none');
+                } else if (value === 'role') {
+                    roleWrapper.classList.remove('d-none');
                 } else {
                     textInputWrapper.classList.remove('d-none');
-                    startDateWrapper.classList.add('d-none');
-                    endDateWrapper.classList.add('d-none');
                 }
             }
             updateFilterFields();

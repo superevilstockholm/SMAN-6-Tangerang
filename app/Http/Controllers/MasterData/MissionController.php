@@ -100,6 +100,12 @@ class MissionController extends Controller
             $validated = $request->validate([
                 'content' => 'required|string',
                 'item_order' => 'required|integer|min:1',
+            ], [
+                'content.required' => 'Kolom content wajib di isi.',
+                'content.string' => 'Format content tidak sesuai.',
+                'item_order.required' => 'Kolom item order wajib di isi.',
+                'item_order.integer' => 'Format item order tidak sesuai.',
+                'item_order.min' => 'Item order minimal :min.',
             ]);
             DB::transaction(function () use ($validated) {
                 Mission::where('item_order', '>=', $validated['item_order'])
@@ -160,6 +166,12 @@ class MissionController extends Controller
             $validated = $request->validate([
                 'content' => 'required|string',
                 'item_order' => 'required|integer|min:1',
+            ], [
+                'content.required' => 'Kolom content wajib di isi.',
+                'content.string' => 'Format content tidak sesuai.',
+                'item_order.required' => 'Kolom item order wajib di isi.',
+                'item_order.integer' => 'Format item order tidak sesuai.',
+                'item_order.min' => 'Item order minimal :min.',
             ]);
             DB::transaction(function () use ($validated, $mission) {
                 $oldOrder = $mission->item_order;

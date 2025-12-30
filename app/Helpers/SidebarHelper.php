@@ -14,6 +14,7 @@ if (!function_exists('adminSidebarItems')) {
                 ['label' => 'school Histories', 'icon' => 'ti ti-book', 'route' => 'dashboard.admin.master-data.school-histories.index'],
                 ['label' => 'visions', 'icon' => 'ti ti-eye', 'route' => 'dashboard.admin.master-data.visions.index'],
                 ['label' => 'missions', 'icon' => 'ti ti-target', 'route' => 'dashboard.admin.master-data.missions.index'],
+                ['label' => 'teachers', 'icon' => 'ti ti-school', 'route' => 'dashboard.admin.master-data.teachers.index'],
             ],
         ];
         foreach ($items as $group => &$groupItems) {

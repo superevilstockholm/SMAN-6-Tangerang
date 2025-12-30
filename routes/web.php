@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MasterData\UserController;
 use App\Http\Controllers\MasterData\VisionController;
 use App\Http\Controllers\MasterData\MissionController;
+use App\Http\Controllers\MasterData\TeacherController;
 use App\Http\Controllers\MasterData\SchoolHistoryController;
 
 Route::get('/', function () {
@@ -44,6 +45,9 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
                 ]);
                 Route::resource('missions', MissionController::class)->parameters([
                     'missions' => 'mission'
+                ]);
+                Route::resource('teachers', TeacherController::class)->parameters([
+                    'teachers' => 'teacher'
                 ]);
             });
         });

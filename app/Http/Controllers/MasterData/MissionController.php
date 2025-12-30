@@ -65,7 +65,7 @@ class MissionController extends Controller
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
-            return view('pages.dashboard.admin.master-data.missions.index', [
+            return view('pages.dashboard.admin.master-data.mission.index', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
@@ -83,7 +83,7 @@ class MissionController extends Controller
     {
         $total = Mission::count();
         $orders = range(1, $total + 1);
-        return view('pages.dashboard.admin.master-data.missions.create', [
+        return view('pages.dashboard.admin.master-data.mission.create', [
             'meta' => [
                 'sidebarItems' => adminSidebarItems(),
             ],
@@ -127,7 +127,7 @@ class MissionController extends Controller
     public function show(Mission $mission): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.admin.master-data.missions.show', [
+            return view('pages.dashboard.admin.master-data.mission.show', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
@@ -145,7 +145,7 @@ class MissionController extends Controller
     {
         try {
             $total = Mission::count();
-            return view('pages.dashboard.admin.master-data.missions.edit', [
+            return view('pages.dashboard.admin.master-data.mission.edit', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],

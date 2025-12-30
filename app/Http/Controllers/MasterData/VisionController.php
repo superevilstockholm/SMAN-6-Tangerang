@@ -50,7 +50,7 @@ class VisionController extends Controller
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
-            return view('pages.dashboard.admin.master-data.visions.index', [
+            return view('pages.dashboard.admin.master-data.vision.index', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
@@ -67,7 +67,7 @@ class VisionController extends Controller
     public function create(): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.admin.master-data.visions.create', [
+            return view('pages.dashboard.admin.master-data.vision.create', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ]
@@ -107,7 +107,7 @@ class VisionController extends Controller
     public function show(Vision $vision): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.admin.master-data.visions.show', [
+            return view('pages.dashboard.admin.master-data.vision.show', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
@@ -124,7 +124,7 @@ class VisionController extends Controller
     public function edit(Vision $vision): View | RedirectResponse
     {
         try {
-            return view('pages.dashboard.admin.master-data.visions.edit', [
+            return view('pages.dashboard.admin.master-data.vision.edit', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],

@@ -4,6 +4,9 @@ namespace App\Models\MasterData;
 
 use Illuminate\Database\Eloquent\Model;
 
+// Models
+use App\Models\User;
+
 class Teacher extends Model
 {
     protected $table = 'teachers';
@@ -11,10 +14,16 @@ class Teacher extends Model
     protected $fillable = [
         'name',
         'nip',
-        'birth_date',
+        'dob',
+        'user_id',
     ];
 
     protected $casts = [
-        'birth_date' => 'date'
+        'dob' => 'date'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

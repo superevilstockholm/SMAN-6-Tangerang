@@ -7,10 +7,16 @@ use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+
+// Enums
+use App\Enums\RoleEnum;
 
 // Models
+use App\Models\User;
 use App\Models\MasterData\Teacher;
 
 class TeacherController extends Controller
@@ -70,17 +76,63 @@ class TeacherController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.teacher.create', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.teachers.index')->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'nip' => 'required|string|unique:teachers,nip|size:18',
+                'dob' => 'required|date',
+                'with_user' => 'nullable|boolean',
+                'email' => 'required_if:with_user,1|email|unique:users,email',
+                'password' => 'required_if:with_user,1|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-_]).{8,255}$/',
+                'profile_picture_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            ]);
+            DB::transaction(function () use ($validated, $request) {
+                $userId = null;
+                if ($request->boolean('with_user')) {
+                    $profilePath = null;
+                    if ($request->hasFile('profile_picture_image')) {
+                        $profilePath = $request
+                            ->file('profile_picture_image')
+                            ->store('profile-pictures', 'public');
+                    }
+                    $user = User::create([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'],
+                        'role' => RoleEnum::TEACHER,
+                        'password' => Hash::make($validated['password']),
+                        'profile_picture_path' => $profilePath,
+                    ]);
+                    $userId = $user->id;
+                }
+                Teacher::create([
+                    'name' => $validated['name'],
+                    'nip' => $validated['nip'],
+                    'dob' => $validated['dob'],
+                    'user_id' => $userId,
+                ]);
+            });
+            return redirect()->route('dashboard.admin.master-data.teachers.index')->with('success', 'Teacher created successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -114,6 +166,9 @@ class TeacherController extends Controller
     {
         try {
             DB::transaction(function () use ($teacher) {
+                if ($teacher->user?->profile_picture_path) {
+                    Storage::disk('public')->delete($teacher->user->profile_picture_path);
+                }
                 $teacher->user?->delete();
                 $teacher->delete();
             });

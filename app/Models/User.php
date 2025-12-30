@@ -11,6 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 // Enums
 use App\Enums\RoleEnum;
 
+// Models
+use App\Models\MasterData\Teacher;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -62,5 +65,10 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => RoleEnum::class,
         ];
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
     }
 }

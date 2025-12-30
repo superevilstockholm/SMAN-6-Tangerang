@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('nip', 18)->unique();
-            $table->date('birth_date');
+            $table->date('dob');
             $table->timestamps();
         });
     }

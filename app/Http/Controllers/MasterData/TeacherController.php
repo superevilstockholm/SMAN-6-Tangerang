@@ -6,6 +6,7 @@ use Throwable;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 
@@ -109,8 +110,16 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher): RedirectResponse
     {
-        //
+        try {
+            DB::transaction(function () use ($teacher) {
+                $teacher->user?->delete();
+                $teacher->delete();
+            });
+            return redirect()->route('dashboard.admin.master-data.teachers.index')->with('success', 'Teacher deleted successfully.');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.teachers.index')->withErrors($e->getMessage());
+        }
     }
 }

@@ -138,9 +138,18 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Teacher $teacher)
+    public function show(Teacher $teacher): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.teacher.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'teacher' => $teacher->load('user')
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.teachers.index')->withErrors($e->getMessage());
+        }
     }
 
     /**

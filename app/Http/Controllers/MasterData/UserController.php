@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MasterData;
 
 use Throwable;
+use Exception;
 use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\User;
+use App\Models\MasterData\Teacher;
 
 // Enums
 use App\Enums\RoleEnum;
@@ -154,11 +156,15 @@ class UserController extends Controller
     public function edit(User $user): View | RedirectResponse
     {
         try {
+            $teachers = Teacher::whereNull('user_id')
+                ->orWhere('user_id', $user->id)
+                ->get();
             return view('pages.dashboard.admin.master-data.user.edit', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
-                'user' => $user
+                'user' => $user,
+                'teachers' => $teachers,
             ]);
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.master-data.users.index')->withErrors($e->getMessage());
@@ -176,6 +182,7 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email,' . $user->id . '|max:255',
                 'password' => 'sometimes|nullable|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-_]).{8,255}$/',
                 'role' => ['required', Rule::enum(RoleEnum::class)],
+                'teacher_id' => 'required_if:role,' . RoleEnum::TEACHER->value . '|nullable|exists:teachers,id',
                 'profile_picture_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
                 'delete_profile_picture' => 'nullable|boolean',
             ], [
@@ -190,6 +197,8 @@ class UserController extends Controller
                 'password.max' => 'Panjang password maksimal :max karakter.',
                 'password.regex' => 'Password harus memiliki setidaknya satu huruf besar, satu huruf kecil, satu angka, dan satu karakter khusus.',
                 'role.required' => 'Kolom role wajib di isi.',
+                'teacher_id.required_if' => 'Kolom teacher_id wajib di isi.',
+                'teacher_id.exists' => 'Teacher ID tidak ditemukan.',
                 'profile_picture_image.image' => 'Format gambar tidak sesuai.',
                 'profile_picture_image.mimes' => 'Format gambar tidak diperbolehkan.',
                 'profile_picture_image.max' => 'Ukuran gambar maksimal :max KB.',
@@ -215,11 +224,28 @@ class UserController extends Controller
             }
             unset($validated['profile_picture_image'], $validated['delete_profile_picture']);
             DB::transaction(function () use ($user, $validated) {
-                if ($user->role === RoleEnum::TEACHER && $user->teacher) {
-                    $user->teacher->update([
+                $oldRole = $user->getOriginal('role');
+                dd($oldRole);
+                if ($oldRole === RoleEnum::TEACHER && $validated['role'] !== RoleEnum::TEACHER) {
+                    Teacher::where('user_id', $user->id)->update(['user_id' => null]);
+                }
+                if ($validated['role'] === RoleEnum::TEACHER->value) {
+                    if (!$validated['teacher_id']) {
+                        throw new Exception('Data Guru harus dipilih untuk role Teacher.');
+                    }
+                    $targetTeacher = Teacher::findOrFail($validated['teacher_id']);
+                    if ($targetTeacher->user_id && $targetTeacher->user_id !== $user->id) {
+                        throw new Exception('Data Guru ini sudah terhubung dengan akun lain.');
+                    }
+                    Teacher::where('user_id', $user->id)
+                        ->where('id', '!=', $validated['teacher_id'])
+                        ->update(['user_id' => null]);
+                    $targetTeacher->update([
+                        'user_id' => $user->id,
                         'name' => $validated['name']
                     ]);
                 }
+                unset($validated['teacher_id']);
                 $user->update($validated);
             });
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User updated successfully.');

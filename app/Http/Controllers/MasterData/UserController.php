@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -213,7 +214,14 @@ class UserController extends Controller
                 $validated['profile_picture_path'] = null;
             }
             unset($validated['profile_picture_image'], $validated['delete_profile_picture']);
-            $user->update($validated);
+            DB::transaction(function () use ($user, $validated) {
+                if ($user->role === RoleEnum::TEACHER && $user->teacher) {
+                    $user->teacher->update([
+                        'name' => $validated['name']
+                    ]);
+                }
+                $user->update($validated);
+            });
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User updated successfully.');
         } catch (Throwable $e) {
             return back()->withErrors($e->getMessage())->withInput();

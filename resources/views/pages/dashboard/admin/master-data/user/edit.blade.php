@@ -76,8 +76,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <select name="role" id="floatingSelectRole"
-                                class="form-select @error('role') is-invalid @enderror"
-                                required>
+                                class="form-select @error('role') is-invalid @enderror" required>
                                 <option value="" disabled>Pilih Role</option>
                                 @foreach (RoleEnum::cases() as $role)
                                     <option value="{{ $role->value }}"
@@ -88,6 +87,21 @@
                             </select>
                             <label for="floatingSelectRole">Role</label>
                             @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating mb-3" id="teacherFieldContainer" style="display: {{ old('role', $user->role->value) === RoleEnum::TEACHER->value ? 'block' : 'none' }};">
+                            <select name="teacher_id" id="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror">
+                                <option value="">-- Pilih Data Guru --</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}"
+                                        {{ old('teacher_id', $user->teacher?->id) == $teacher->id ? 'selected' : '' }}>
+                                        {{ $teacher->nip }} - {{ $teacher->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="teacher_id">Hubungkan dengan Data Guru</label>
+                            @error('teacher_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -149,6 +163,20 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.getElementById('floatingSelectRole');
+            const teacherContainer = document.getElementById('teacherFieldContainer');
+            const teacherSelect = document.getElementById('teacher_id');
+            function toggleTeacherField() {
+                if (roleSelect.value === 'teacher') {
+                    teacherContainer.style.display = 'block';
+                    teacherSelect.setAttribute('required', 'required');
+                } else {
+                    teacherContainer.style.display = 'none';
+                    teacherSelect.removeAttribute('required');
+                }
+            }
+            roleSelect.addEventListener('change', toggleTeacherField);
+            toggleTeacherField();
             document.querySelectorAll('.btn-delete').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     const userId = this.getAttribute('data-id');

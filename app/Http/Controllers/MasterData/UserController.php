@@ -234,6 +234,11 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         try {
+            if ($user->role === RoleEnum::TEACHER && $user->teacher) {
+                $user->teacher->update([
+                    'user_id' => null
+                ]);
+            }
             if ($user->profile_picture_path) {
                 Storage::disk('public')->delete($user->profile_picture_path);
             }

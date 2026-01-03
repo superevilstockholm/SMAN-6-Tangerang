@@ -72,6 +72,12 @@
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
+                    @if (!empty($teacher->user))
+                        <a href="{{ route('dashboard.admin.master-data.users.show', $teacher->user->id) }}"
+                            class="btn btn-primary w-100 mb-2">
+                            <i class="ti ti-pencil me-1"></i> Lihat Detail Pengguna
+                        </a>
+                    @endif
                     <a href="{{ route('dashboard.admin.master-data.teachers.edit', $teacher->id) }}"
                         class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Guru

@@ -79,10 +79,12 @@ class UserController extends Controller
     public function create(): View | RedirectResponse
     {
         try {
+            $teachers = Teacher::whereNull('user_id')->get();
             return view('pages.dashboard.admin.master-data.user.create', [
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
+                'teachers' => $teachers,
             ]);
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.master-data.users.index')->withErrors($e->getMessage());
@@ -100,6 +102,7 @@ class UserController extends Controller
                 'email' => 'required|email|unique:users,email|max:255',
                 'password' => 'required|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-_]).{8,255}$/',
                 'role' => ['required', Rule::enum(RoleEnum::class)],
+                'teacher_id' => 'required_if:role,' . RoleEnum::TEACHER->value . '|nullable|exists:teachers,id',
                 'profile_picture_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             ], [
                 'name.required' => 'Kolom nama wajib di isi.',
@@ -115,6 +118,8 @@ class UserController extends Controller
                 'password.max' => 'Panjang password maksimal :max karakter.',
                 'password.regex' => 'Password harus memiliki setidaknya satu huruf besar, satu huruf kecil, satu angka, dan satu karakter khusus.',
                 'role.required' => 'Kolom role wajib di isi.',
+                'teacher_id.required_if' => 'Kolom teacher_id wajib di isi.',
+                'teacher_id.exists' => 'Teacher ID tidak ditemukan.',
                 'profile_picture_image.image' => 'Format gambar tidak sesuai.',
                 'profile_picture_image.mimes' => 'Format gambar tidak diperbolehkan.',
                 'profile_picture_image.max' => 'Ukuran gambar maksimal :max KB.',
@@ -126,7 +131,19 @@ class UserController extends Controller
                     ->store('profile-pictures', 'public');
             }
             unset($validated['profile_picture_image']);
-            User::create($validated);
+            DB::transaction(function () use ($validated) {
+                $user = User::create($validated);
+                if ($validated['role'] === RoleEnum::TEACHER->value) {
+                    $teacher = Teacher::findOrFail($validated['teacher_id']);
+                    if ($teacher->user_id) {
+                        throw new Exception('Data Guru ini sudah terhubung dengan akun lain.');
+                    }
+                    $teacher->update([
+                        'user_id' => $user->id,
+                        'name' => $user->name
+                    ]);
+                }
+            });
             return redirect()->route('dashboard.admin.master-data.users.index')->with('success', 'User created successfully.');
         } catch (Throwable $e) {
             return back()->withErrors($e->getMessage())->withInput();

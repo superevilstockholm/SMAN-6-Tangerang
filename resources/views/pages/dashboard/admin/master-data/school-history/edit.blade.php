@@ -101,9 +101,16 @@
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
                     <a href="{{ route('dashboard.admin.master-data.school-histories.show', $school_history->id) }}"
-                        class="btn btn-warning w-100 mb-2">
-                        <i class="ti ti-eye me-1"></i> Lihat Detail
+                        class="btn btn-primary w-100 mb-2">
+                        <i class="ti ti-eye me-1"></i> Lihat Detail Sejarah
                     </a>
+                    <form id="form-delete-{{ $school_history->id }}" action="{{ route('dashboard.admin.master-data.school-histories.destroy', $school_history->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $school_history->id }}" data-name="{{ $school_history->title }}">
+                            <i class="ti ti-trash me-1"></i> Hapus Sejarah
+                        </button>
+                    </form>
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Petunjuk Edit</h4>
                     <ul class="text-muted small ps-3">
@@ -116,4 +123,28 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btn-delete').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const historyId = this.getAttribute('data-id');
+                    const historyTitle = this.getAttribute('data-name');
+                    Swal.fire({
+                        title: "Hapus Sejarah?",
+                        text: "Apakah Anda yakin ingin menghapus sejarah sekolah \"" + historyTitle + "\"? Aksi ini tidak dapat dibatalkan.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d33",
+                        cancelButtonColor: "#3085d6",
+                        confirmButtonText: "Ya, hapus!",
+                        cancelButtonText: "Batal"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('form-delete-' + historyId).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

@@ -69,7 +69,7 @@
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
                     <a href="{{ route('dashboard.admin.master-data.visions.show', $vision->id) }}"
                         class="btn btn-primary w-100 mb-2">
-                        <i class="ti ti-eye me-1"></i> Lihat Detail
+                        <i class="ti ti-eye me-1"></i> Lihat Detail Visi
                     </a>
                     <form id="form-delete-{{ $vision->id }}" action="{{ route('dashboard.admin.master-data.visions.destroy', $vision->id) }}" method="POST">
                         @csrf

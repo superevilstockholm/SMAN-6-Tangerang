@@ -38,7 +38,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Tanggal Lahir</div>
-                        <div class="col-md-8 fw-medium">{{ $teacher->dob?->format('d M Y H:i:s') ?? '-' }}</div>
+                        <div class="col-md-8 fw-medium">{{ $teacher->dob?->format('d F Y') ?? '-' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">ID User</div>

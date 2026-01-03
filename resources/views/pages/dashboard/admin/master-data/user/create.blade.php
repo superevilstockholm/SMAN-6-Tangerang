@@ -70,6 +70,20 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="form-floating mb-3" id="teacherFieldContainer" style="display: none;">
+                            <select name="teacher_id" id="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror">
+                                <option value="">-- Pilih Data Guru --</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}" {{ old('teacher_id') == $teacher->id ? 'selected' : '' }}>
+                                        {{ $teacher->nip }} - {{ $teacher->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="teacher_id">Hubungkan dengan Data Guru</label>
+                            @error('teacher_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <div class="form-floating mb-4">
                             <input type="password" name="password"
                                 class="form-control @error('password') is-invalid @enderror" id="floatingInputPassword"
@@ -93,4 +107,23 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.getElementById('floatingSelectRole');
+            const teacherContainer = document.getElementById('teacherFieldContainer');
+            const teacherSelect = document.getElementById('teacher_id');
+            function toggleTeacherField() {
+                if (roleSelect.value === 'teacher') {
+                    teacherContainer.style.display = 'block';
+                    teacherSelect.setAttribute('required', 'required');
+                } else {
+                    teacherContainer.style.display = 'none';
+                    teacherSelect.removeAttribute('required');
+                    teacherSelect.value = '';
+                }
+            }
+            roleSelect.addEventListener('change', toggleTeacherField);
+            toggleTeacherField();
+        });
+    </script>
 @endsection

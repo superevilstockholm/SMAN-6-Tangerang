@@ -4,6 +4,9 @@
 @section('meta-keywords', 'master data, detail pengguna, detail user, user, pengguna, sman 6, sman 6 tangerang')
 @section('content')
     <x-alerts :errors="$errors" />
+    @php
+        use App\Enums\RoleEnum;
+    @endphp
     <div class="row mb-4">
         <div class="col">
             <div class="card my-0">
@@ -65,6 +68,12 @@
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
+                    @if ($user->role == RoleEnum::TEACHER && !empty($user->teacher))
+                        <a href="{{ route('dashboard.admin.master-data.teachers.show', $user->teacher->id) }}"
+                            class="btn btn-primary w-100 mb-2">
+                            <i class="ti ti-eye me-1"></i> Lihat Detail Guru
+                        </a>
+                    @endif
                     <a href="{{ route('dashboard.admin.master-data.users.edit', $user->id) }}"
                         class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Pengguna

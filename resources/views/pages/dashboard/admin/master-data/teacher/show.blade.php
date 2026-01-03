@@ -38,7 +38,7 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">Tanggal Lahir</div>
-                        <div class="col-md-8 fw-medium">{{ $teacher->dob?->format('d M Y H:i:s') ?? '-' }}</div>
+                        <div class="col-md-8 fw-medium">{{ $teacher->dob?->format('d F Y') ?? '-' }}</div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 text-muted">ID User</div>
@@ -72,6 +72,12 @@
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
+                    @if (!empty($teacher->user))
+                        <a href="{{ route('dashboard.admin.master-data.users.show', $teacher->user->id) }}"
+                            class="btn btn-primary w-100 mb-2">
+                            <i class="ti ti-eye me-1"></i> Lihat Detail Pengguna
+                        </a>
+                    @endif
                     <a href="{{ route('dashboard.admin.master-data.teachers.edit', $teacher->id) }}"
                         class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Guru

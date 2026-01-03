@@ -76,8 +76,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <select name="role" id="floatingSelectRole"
-                                class="form-select @error('role') is-invalid @enderror"
-                                required>
+                                class="form-select @error('role') is-invalid @enderror" required>
                                 <option value="" disabled>Pilih Role</option>
                                 @foreach (RoleEnum::cases() as $role)
                                     <option value="{{ $role->value }}"
@@ -88,6 +87,21 @@
                             </select>
                             <label for="floatingSelectRole">Role</label>
                             @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-floating mb-3" id="teacherFieldContainer" style="display: {{ old('role', $user->role->value) === RoleEnum::TEACHER->value ? 'block' : 'none' }};">
+                            <select name="teacher_id" id="teacher_id" class="form-select @error('teacher_id') is-invalid @enderror">
+                                <option value="">-- Pilih Data Guru --</option>
+                                @foreach ($teachers as $teacher)
+                                    <option value="{{ $teacher->id }}"
+                                        {{ old('teacher_id', $user->teacher?->id) == $teacher->id ? 'selected' : '' }}>
+                                        {{ $teacher->nip }} - {{ $teacher->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="teacher_id">Hubungkan dengan Data Guru</label>
+                            @error('teacher_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -118,9 +132,22 @@
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
                     <a href="{{ route('dashboard.admin.master-data.users.show', $user->id) }}"
-                        class="btn btn-warning w-100 mb-2">
-                        <i class="ti ti-eye me-1"></i> Lihat Detail
+                        class="btn btn-primary w-100 mb-2">
+                        <i class="ti ti-eye me-1"></i> Lihat Detail Pengguna
                     </a>
+                    @if ($user->role == RoleEnum::TEACHER && !empty($user->teacher))
+                        <a href="{{ route('dashboard.admin.master-data.teachers.edit', $user->teacher->id) }}"
+                            class="btn btn-warning w-100 mb-2">
+                            <i class="ti ti-pencil me-1"></i> Edit Guru
+                        </a>
+                    @endif
+                    <form id="form-delete-{{ $user->id }}" action="{{ route('dashboard.admin.master-data.users.destroy', $user->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $user->id }}" data-name="{{ $user->name }}">
+                            <i class="ti ti-trash me-1"></i> Hapus Pengguna
+                        </button>
+                    </form>
                     <hr class="my-4">
                     <h4 class="card-title fw-semibold mb-3">Petunjuk Edit</h4>
                     <ul class="text-muted small ps-3">
@@ -134,4 +161,42 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.getElementById('floatingSelectRole');
+            const teacherContainer = document.getElementById('teacherFieldContainer');
+            const teacherSelect = document.getElementById('teacher_id');
+            function toggleTeacherField() {
+                if (roleSelect.value === 'teacher') {
+                    teacherContainer.style.display = 'block';
+                    teacherSelect.setAttribute('required', 'required');
+                } else {
+                    teacherContainer.style.display = 'none';
+                    teacherSelect.removeAttribute('required');
+                }
+            }
+            roleSelect.addEventListener('change', toggleTeacherField);
+            toggleTeacherField();
+            document.querySelectorAll('.btn-delete').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const userId = this.getAttribute('data-id');
+                    const userName = this.getAttribute('data-name');
+                    Swal.fire({
+                        title: "Hapus Pengguna?",
+                        text: "Apakah Anda yakin ingin menghapus \"" + userName + "\"? Aksi ini tidak dapat dibatalkan.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d33",
+                        cancelButtonColor: "#3085d6",
+                        confirmButtonText: "Ya, hapus!",
+                        cancelButtonText: "Batal"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById('form-delete-' + userId).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

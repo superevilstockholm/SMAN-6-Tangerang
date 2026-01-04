@@ -18,6 +18,7 @@ class ActivityLog extends Model
         'route_name',
         'ip_address',
         'user_agent',
+        'status_code',
     ];
 
     public function user()

@@ -14,6 +14,11 @@ use App\Models\Settings\ActivityLog;
 
 class ActivityLoggerMiddleware
 {
+    protected function shouldLog(Request $request): bool
+    {
+        return in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE']);
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -23,7 +28,7 @@ class ActivityLoggerMiddleware
     {
         $response = $next($request);
         try {
-            if (in_array($request->method(), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            if ($this->shouldLog($request)) {
                 ActivityLog::create([
                     'method' => $request->method(),
                     'path' => $request->path(),
@@ -31,6 +36,7 @@ class ActivityLoggerMiddleware
                     'route_name' => optional($request->route())->getName(),
                     'ip_address' => $request->ip(),
                     'user_agent' => Str::limit($request->userAgent() ?? '', 1000),
+                    'status_code' => $response->getStatusCode(),
                 ]);
             }
         } catch (Throwable $e) {

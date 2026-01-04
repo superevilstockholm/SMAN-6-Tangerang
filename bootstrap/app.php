@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 // Middlewares
 use App\Http\Middleware\MinifyMiddleware;
 use App\Http\Middleware\Auth\RoleMiddleware;
+use App\Http\Middleware\ActivityLoggerMiddleware;
 use App\Http\Middleware\Auth\CookieBasedSanctumAuthMiddleware;
 use App\Http\Middleware\Auth\OptionalCookieBasedSanctumAuthMiddleware;
 
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'auth.sanctum.cookie' => CookieBasedSanctumAuthMiddleware::class,
             'optional.auth.sanctum.cookie' => OptionalCookieBasedSanctumAuthMiddleware::class,
+            'activity.log' => ActivityLoggerMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -16,6 +16,9 @@ if (!function_exists('adminSidebarItems')) {
                 ['label' => 'missions', 'icon' => 'ti ti-target', 'route' => 'dashboard.admin.master-data.missions.index'],
                 ['label' => 'teachers', 'icon' => 'ti ti-school', 'route' => 'dashboard.admin.master-data.teachers.index'],
             ],
+            'settings' => [
+                ['label' => 'activity logs', 'icon' => 'ti ti-history', 'route' => 'dashboard.admin.settings.activity-logs.index'],
+            ],
         ];
         foreach ($items as $group => &$groupItems) {
             foreach ($groupItems as &$item) {

@@ -12,6 +12,9 @@ use App\Http\Controllers\MasterData\MissionController;
 use App\Http\Controllers\MasterData\TeacherController;
 use App\Http\Controllers\MasterData\SchoolHistoryController;
 
+// Settings Controllers
+use App\Http\Controllers\Settings\ActivityLogController;
+
 Route::get('/', function () {
     return view('pages.index');
 });
@@ -22,7 +25,7 @@ Route::middleware(['optional.auth.sanctum.cookie'])->group(function () {
 });
 
 // Protected
-Route::middleware(['auth.sanctum.cookie'])->group(function () {
+Route::middleware(['auth.sanctum.cookie', 'activity.log'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::prefix('/dashboard')->name('dashboard.')->group(function () {
         // Admin
@@ -49,6 +52,11 @@ Route::middleware(['auth.sanctum.cookie'])->group(function () {
                 Route::resource('teachers', TeacherController::class)->parameters([
                     'teachers' => 'teacher'
                 ]);
+            });
+            Route::prefix('settings')->name('settings.')->group(function () {
+                Route::resource('activity-logs', ActivityLogController::class)->parameters([
+                    'activity-logs' => 'activityLog'
+                ])->only(['index', 'show']);
             });
         });
         // Teacher

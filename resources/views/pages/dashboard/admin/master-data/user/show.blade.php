@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('title', 'Detail Data Pengguna - SMAN 6 Tangerang')
 @section('meta-description', 'Detail data pengguna SMAN 6 Tangerang')
-@section('meta-keywords', 'master data, detail pengguna, detail user, user, pengguna, sman 6, sman 6 tangerang')
+@section('meta-keywords', 'master data, detail pengguna, detail user, pengguna, user, sman 6, sman 6 tangerang')
 @section('content')
     <x-alerts :errors="$errors" />
     @php

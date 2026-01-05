@@ -68,8 +68,17 @@ class ActivityLogController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ActivityLog $activityLog)
+    public function show(ActivityLog $activityLog): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.settings.activity-log.show', [
+                'emta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'activity_log' => $activityLog->load('user:name'),
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.settings.activity-logs.index')->withErrors($e->getMessage());
+        }
     }
 }

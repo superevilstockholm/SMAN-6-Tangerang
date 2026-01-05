@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\MinifyMiddleware;
 use App\Http\Middleware\Auth\RoleMiddleware;
 use App\Http\Middleware\ActivityLoggerMiddleware;
+use App\Http\Middleware\ValidatePaginationMiddleware;
 use App\Http\Middleware\Auth\CookieBasedSanctumAuthMiddleware;
 use App\Http\Middleware\Auth\OptionalCookieBasedSanctumAuthMiddleware;
 
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.sanctum.cookie' => CookieBasedSanctumAuthMiddleware::class,
             'optional.auth.sanctum.cookie' => OptionalCookieBasedSanctumAuthMiddleware::class,
             'activity.log' => ActivityLoggerMiddleware::class,
+            'validate.pagination' => ValidatePaginationMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -19,7 +19,7 @@ class ValidatePaginationMiddleware
             $limit = $request->query('limit');
             $query = $request->query();
             unset($query['limit']);
-            if (! is_numeric($limit) || (int) $limit < 1) {
+            if ($limit !== 'all' && (!is_numeric($limit) || (int) $limit < 1)) {
                 return redirect()
                     ->to($request->url() . '?' . http_build_query($query))
                     ->with('error', 'Parameter pagination tidak valid.');

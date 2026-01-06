@@ -39,18 +39,20 @@ class ActivityLogController extends Controller
                     }
                 } else {
                     $search = $request->query('search');
-                    if ($search) {
+                    if (!empty($search)) {
                         if ($type === 'user_name') {
                             $query->whereHas('user', function ($q) use ($search) {
                                 $q->where('name', 'like', '%' . $search . '%');
                             });
+                        } else if ($type === 'method') {
+                            $query->where('method', $search);
                         } else {
                             $query->where($type, 'like', '%' . $search . '%');
                         }
                     }
                 }
             }
-            $activity_logs = $limit === 'all'
+            $activityLogs = $limit === 'all'
                 ? $query->get()
                 : $query->paginate((int) $limit)
                     ->appends($request->except('page'));
@@ -58,7 +60,7 @@ class ActivityLogController extends Controller
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
-                'activity_logs' => $activity_logs,
+                'activityLogs' => $activityLogs,
             ]);
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.settings.activity-logs.index')->withErrors($e->getMessage());
@@ -72,7 +74,7 @@ class ActivityLogController extends Controller
     {
         try {
             return view('pages.dashboard.admin.settings.activity-log.show', [
-                'emta' => [
+                'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
                 'activity_log' => $activityLog->load('user:name'),

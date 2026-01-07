@@ -77,7 +77,7 @@ class ActivityLogController extends Controller
                 'meta' => [
                     'sidebarItems' => adminSidebarItems(),
                 ],
-                'activity_log' => $activityLog->load('user:name'),
+                'activityLog' => $activityLog->load('user:name'),
             ]);
         } catch (Throwable $e) {
             return redirect()->route('dashboard.admin.settings.activity-logs.index')->withErrors($e->getMessage());

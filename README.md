@@ -1,6 +1,10 @@
-# Website Resmi SMAN 6 Tangerang (WIP)  
+# Website Informasi SMA Negeri 6 Kota Tangerang (Fan-Made / Non-Resmi) - WIP
 
-Website Resmi **SMA Negeri 6 Kota Tangerang** dibangun menggunakan framework **Laravel** sebagai backend, **Bootstrap** sebagai frontend framework, serta **Berry Admin Template** yang telah dimodifikasi dengan **dark theme custom** untuk sistem CMS (Content Management System).  
+Website ini merupakan proyek pengembangan web bersifat fan-made (tidak resmi) yang dibuat sebagai media latihan, pembelajaran, dan portofolio pengembangan sistem informasi sekolah.
+
+Website ini tidak mewakili, tidak dikelola, dan tidak memiliki afiliasi resmi dengan SMA Negeri 6 Kota Tangerang. Seluruh konten bersifat informatif dan simulatif.
+
+Website dibangun menggunakan framework Laravel sebagai backend, Bootstrap sebagai frontend framework, serta Berry Admin Template yang telah dimodifikasi dengan custom dark theme untuk sistem CMS (Content Management System).
 
 Website ini berfungsi sebagai media informasi sekolah sekaligus sistem pengelolaan konten internal yang terstruktur dan mudah digunakan.  
 
@@ -11,7 +15,7 @@ Website ini berfungsi sebagai media informasi sekolah sekaligus sistem pengelola
 -   **Backend**: Laravel  
 -   **Frontend**: Bootstrap  
 -   **Admin Template**: Berry Template (Customized)  
--   **Theme**: Custom Dark Theme  
+-   **Theme**: Light & Custom Dark Theme  
 -   **Database**: MySQL  
 -   **Authentication**: Custom Laravel Sanctum Auth  
 -   **ORM**: Eloquent  
@@ -22,7 +26,7 @@ Website ini berfungsi sebagai media informasi sekolah sekaligus sistem pengelola
 
 ### 1. CMS (Admin Panel)  
 
-CMS digunakan untuk mengelola seluruh konten website secara terpusat.  
+CMS ini dibuat sebagai simulasi sistem manajemen konten sekolah, bukan sistem produksi resmi.
 
 #### 🔹 Master Data  
 
@@ -144,10 +148,19 @@ Admin panel menggunakan **Berry Template** yang telah dimodifikasi:
 
 ---
 
+## ⚠️ Disclaimer  
+
+-   Tidak berafiliasi dengan SMA Negeri 6 Kota Tangerang  
+-   Tidak digunakan untuk operasional sekolah  
+-   Data, konten, dan fitur bersifat simulatif  
+-   Dibuat untuk tujuan edukasi dan portofolio   
+
+---
+
 ## 📄 Lisensi
 
-Proyek ini dikembangkan untuk kebutuhan **SMA Negeri 6 Kota Tangerang**.  
-Penggunaan ulang dan distribusi harus mendapatkan izin dari pihak sekolah.  
+Proyek ini bersifat non-komersial dan dibuat untuk keperluan pembelajaran.
+Nama sekolah digunakan hanya sebagai studi kasus. 
 
 ---
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 
 // Master Data Controllers
 use App\Http\Controllers\MasterData\UserController;
+use App\Http\Controllers\MasterData\NewsController;
 use App\Http\Controllers\MasterData\VisionController;
 use App\Http\Controllers\MasterData\MissionController;
 use App\Http\Controllers\MasterData\TeacherController;
@@ -51,6 +52,9 @@ Route::middleware(['auth.sanctum.cookie', 'activity.log'])->group(function () {
                 ]);
                 Route::resource('teachers', TeacherController::class)->parameters([
                     'teachers' => 'teacher'
+                ]);
+                Route::resource('news', NewsController::class)->parameters([
+                    'news' => 'news'
                 ]);
             });
             Route::prefix('settings')->name('settings.')->middleware(['validate.pagination'])->group(function () {

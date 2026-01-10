@@ -15,6 +15,7 @@ if (!function_exists('adminSidebarItems')) {
                 ['label' => 'visions', 'icon' => 'ti ti-eye', 'route' => 'dashboard.admin.master-data.visions.index'],
                 ['label' => 'missions', 'icon' => 'ti ti-target', 'route' => 'dashboard.admin.master-data.missions.index'],
                 ['label' => 'teachers', 'icon' => 'ti ti-school', 'route' => 'dashboard.admin.master-data.teachers.index'],
+                ['label' => 'news', 'icon' => 'ti ti-news', 'route' => 'dashboard.admin.master-data.news.index'],
             ],
             'settings' => [
                 ['label' => 'activity logs', 'icon' => 'ti ti-history', 'route' => 'dashboard.admin.settings.activity-logs.index'],

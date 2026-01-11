@@ -162,17 +162,82 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Request $request, News $news)
+    public function edit(Request $request, News $news): View | RedirectResponse
     {
-        //
+        try {
+            if (
+                $request->user()->role === RoleEnum::TEACHER &&
+                $news->user_id !== $request->user()->id
+            ) {
+                abort(403);
+            }
+            return view('pages.dashboard.' . $request->user()->role->value . '.master-data.news.edit', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'news' => $news,
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.' . $request->user()->role->value . '.master-data.news.index')->with('error', $e->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, News $news)
+    public function update(Request $request, News $news): RedirectResponse
     {
-        //
+        try {
+            if (
+                $request->user()->role === RoleEnum::TEACHER &&
+                $news->user_id !== $request->user()->id
+            ) {
+                abort(403);
+            }
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'slug' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                    Rule::unique('news', 'slug')->ignore($news->id),
+                ],
+                'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+                'content' => 'required|string',
+                'status' => ['required', Rule::enum(NewsStatusEnum::class)],
+                'published_at' => 'nullable|date',
+            ]);
+            if ($request->hasFile('cover_image')) {
+                if ($news->cover_image) {
+                    Storage::disk('public')->delete($news->cover_image);
+                }
+                $validated['cover_image'] = $request
+                    ->file('cover_image')
+                    ->store('news', 'public');
+            }
+            switch ($validated['status']) {
+                case NewsStatusEnum::DRAFT:
+                    $validated['published_at'] = null;
+                    break;
+                case NewsStatusEnum::PUBLISHED:
+                    if (!$news->published_at) {
+                        $validated['published_at'] = now();
+                    }
+                    break;
+                case NewsStatusEnum::SCHEDULED:
+                    if (
+                        empty($validated['published_at']) ||
+                        Carbon::parse($validated['published_at'])->lte(now())
+                    ) {
+                        return back()->withErrors('Tanggal Publikasi harus lebih besar dari sekarang.')->withInput();
+                    }
+                    break;
+            }
+            $news->update($validated);
+            return redirect()->route('dashboard.' . $request->user()->role->value . '.master-data.news.index')->with('success', 'News updated successfully.');
+        } catch (Throwable $e) {
+            return back()->withErrors($e->getMessage())->withInput();
+        }
     }
 
     /**

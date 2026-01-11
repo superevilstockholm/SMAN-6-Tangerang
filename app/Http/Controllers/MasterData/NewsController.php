@@ -86,9 +86,18 @@ class NewsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(News $news)
+    public function show(News $news): View | RedirectResponse
     {
-        //
+        try {
+            return view('pages.dashboard.admin.master-data.news.show', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'news' => $news->load('user'),
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.news.index')->withErrors($e->getMessage());
+        }
     }
 
     /**

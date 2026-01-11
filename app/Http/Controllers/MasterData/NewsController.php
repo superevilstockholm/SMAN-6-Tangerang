@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\MasterData\News;
@@ -109,8 +110,16 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(News $news)
+    public function destroy(News $news): RedirectResponse
     {
-        //
+        try {
+            if ($news->cover_image) {
+                Storage::disk('public')->delete($news->cover_image);
+            }
+            $news->delete();
+            return redirect()->route('dashboard.admin.master-data.news.index')->with('success', 'News deleted successfully.');
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.news.index')->withErrors($e->getMessage());
+        }
     }
 }

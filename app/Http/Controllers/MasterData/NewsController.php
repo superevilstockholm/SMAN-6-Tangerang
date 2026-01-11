@@ -2,18 +2,68 @@
 
 namespace App\Http\Controllers\MasterData;
 
-use App\Http\Controllers\Controller;
-use App\Models\MasterData\News;
+use Throwable;
+use Carbon\Carbon;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+
+// Models
+use App\Models\MasterData\News;
 
 class NewsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): View | RedirectResponse
     {
-        //
+        try {
+            $limit = $request->query('limit', 10);
+            $query = News::query()->orderBy('created_at', 'desc')->with('user');
+            // Search
+            $allowed_types = ['title', 'slug', 'content', 'published_at', 'user_name', 'date'];
+            $type = $request->query('type');
+            if ($type && in_array($type, $allowed_types)) {
+                if (in_array($type, ['date', 'published_at'])) {
+                    $startDate = $request->query('start_date');
+                    $endDate   = $request->query('end_date');
+                    $dateField = $type === 'published_at'
+                        ? 'published_at'
+                        : 'created_at';
+                    if ($startDate) {
+                        $query->where($dateField, '>=', Carbon::parse($startDate)->startOfDay());
+                    }
+                    if ($endDate) {
+                        $query->where($dateField, '<=', Carbon::parse($endDate)->endOfDay());
+                    }
+                } else {
+                    $search = $request->query('search');
+                    if (!empty($search)) {
+                        if ($type === 'user_name') {
+                            $query->whereHas('user', function ($q) use ($search) {
+                                $q->where('name', 'like', '%' . $search . '%');
+                            });
+                        } else {
+                            $query->where($type, 'like', '%' . $search . '%');
+                        }
+                    }
+                }
+            }
+            $news = $limit === 'all'
+                ? $query->get()
+                : $query->paginate((int) $limit)
+                    ->appends($request->except('page'));
+            return view('pages.dashboard.admin.master-data.news.index', [
+                'meta' => [
+                    'sidebarItems' => adminSidebarItems(),
+                ],
+                'news' => $news,
+            ]);
+        } catch (Throwable $e) {
+            return redirect()->route('dashboard.admin.master-data.news.index')->withErrors($e->getMessage());
+        }
     }
 
     /**

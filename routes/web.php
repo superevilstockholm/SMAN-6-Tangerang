@@ -70,6 +70,11 @@ Route::middleware(['auth.sanctum.cookie', 'activity.log'])->group(function () {
                     'meta' => ['sidebarItems' => adminSidebarItems()],
                 ]);
             })->name('index');
+            Route::prefix('master-data')->name('master-data.')->middleware(['validate.pagination'])->group(function () {
+                Route::resource('news', NewsController::class)->parameters([
+                    'news' => 'news'
+                ]);
+            });
         });
         // Student
         Route::middleware(['role:student'])->prefix('student')->name('student.')->group(function () {

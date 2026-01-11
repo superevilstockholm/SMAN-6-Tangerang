@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 // Models
 use App\Models\User;
 
+// Enums
+use App\Enums\NewsStatusEnum;
+
 class News extends Model
 {
     protected $table = 'news';
@@ -26,6 +29,7 @@ class News extends Model
 
     protected $casts = [
         'published_at' => 'datetime',
+        'status' => NewsStatusEnum::class,
     ];
 
     protected $appends = [
@@ -47,21 +51,31 @@ class News extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query
-            ->where('status', 'published')
+            ->where('status', NewsStatusEnum::PUBLISHED)
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
     }
 
     public function scopeDraft(Builder $query): Builder
     {
-        return $query->where('status', 'draft');
+        return $query->where('status', NewsStatusEnum::DRAFT);
     }
 
     public function scopeScheduled(Builder $query): Builder
     {
         return $query
-            ->where('status', 'scheduled')
+            ->where('status', NewsStatusEnum::SCHEDULED)
             ->where('published_at', '>', now());
+    }
+
+    public static function autoPublishScheduled(): void
+    {
+        static::where('status', NewsStatusEnum::SCHEDULED)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update([
+                'status' => NewsStatusEnum::PUBLISHED,
+            ]);
     }
 
     protected static function generateUniqueSlug(string $title): string
@@ -83,11 +97,5 @@ class News extends Model
                 $news->slug = static::generateUniqueSlug($news->title);
             }
         });
-        static::saving(function (self $news) {
-            if (empty($news->slug)) {
-                $news->slug = static::generateUniqueSlug($news->title);
-            }
-        });
-
     }
 }

@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 // Models
 use App\Models\User;
 
+// Enums
+use App\Enums\NewsStatusEnum;
+
 class News extends Model
 {
     protected $table = 'news';
@@ -62,6 +65,16 @@ class News extends Model
         return $query
             ->where('status', 'scheduled')
             ->where('published_at', '>', now());
+    }
+
+    public static function autoPublishScheduled(): void
+    {
+        static::where('status', NewsStatusEnum::SCHEDULED)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update([
+                'status' => NewsStatusEnum::PUBLISHED,
+            ]);
     }
 
     protected static function generateUniqueSlug(string $title): string

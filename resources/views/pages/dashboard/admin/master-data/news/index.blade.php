@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
-@section('title', 'Data Visi Sekolah - SMAN 6 Tangerang')
-@section('meta-description', 'Daftar data visi sekolah SMAN 6 Tangerang')
-@section('meta-keywords', 'master data, data visi sekolah, data visi, visi, vision, sman 6, sman 6 tangerang')
+@section('title', 'Data Berita - SMAN 6 Tangerang')
+@section('meta-description', 'Daftar data berita SMAN 6 Tangerang')
+@section('meta-keywords', 'master data, data berita sekolah, data berita, berita, news, sman 6, sman 6 tangerang')
 @section('content')
     <x-alerts :errors="$errors" />
     @php
@@ -14,13 +14,13 @@
                 <div
                     class="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 gap-lg-5">
                     <div class="d-flex flex-column">
-                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Visi Sekolah</h3>
-                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data visi sekolah.</p>
+                        <h3 class="p-0 m-0 mb-1 fw-semibold">Data Berita</h3>
+                        <p class="p-0 m-0 fw-medium text-muted">Manajemen data berita.</p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="{{ route('dashboard.admin.master-data.visions.create') }}"
+                        <a href="{{ route('dashboard.admin.master-data.news.create') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
-                            <i class="ti ti-plus me-1"></i> Tambah Visi
+                            <i class="ti ti-plus me-1"></i> Tambah Berita
                         </a>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.admin.master-data.visions.index') }}" id="filterForm">
+                    <form method="GET" action="{{ route('dashboard.admin.master-data.news.index') }}" id="filterForm">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php
@@ -51,11 +51,11 @@
                                 <span class="ms-2">entries</span>
                             </div>
                             <div class="text-muted small">
-                                @if ($visions instanceof LengthAwarePaginator)
-                                    Menampilkan {{ $visions->firstItem() }} hingga {{ $visions->lastItem() }} dari
-                                    {{ $visions->total() }} total entri
+                                @if ($news instanceof LengthAwarePaginator)
+                                    Menampilkan {{ $news->firstItem() }} hingga {{ $news->lastItem() }} dari
+                                    {{ $news->total() }} total entri
                                 @else
-                                    Menampilkan {{ $visions->count() }} total entri
+                                    Menampilkan {{ $news->count() }} total entri
                                 @endif
                             </div>
                         </div>
@@ -64,10 +64,14 @@
                             <div class="form-floating" style="min-width: 180px;">
                                 @php
                                     $filterTypes = [
+                                        'title' => 'Judul',
+                                        'slug' => 'Slug',
                                         'content' => 'Konten',
+                                        'user_name' => 'Nama Penulis',
+                                        'published_at' => 'Tanggal Publish',
                                         'date' => 'Tanggal Dibuat',
                                     ];
-                                    $currentType = request('type') ?: array_key_first($filterTypes);
+                                    $currentType = request('type') ?: 'title';
                                 @endphp
                                 <select class="form-select form-select-sm" id="filterType" name="type">
                                     @foreach ($filterTypes as $key => $label)
@@ -98,36 +102,44 @@
                             <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-search"></i> Cari
                             </button>
-                            <a href="{{ route('dashboard.admin.master-data.visions.index') }}"
+                            <a href="{{ route('dashboard.admin.master-data.news.index') }}"
                                 class="btn btn-secondary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-rotate-clockwise-2"></i> Reset
                             </a>
                         </div>
                     </form>
-                    <div class="table-responsive @if (!($visions instanceof LengthAwarePaginator && $visions->hasPages())) mb-0 @else mb-3 @endif">
+                    <div class="table-responsive @if (!($news instanceof LengthAwarePaginator && $news->hasPages())) mb-0 @else mb-3 @endif">
                         <table class="table table-striped table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
-                                    <th>Konten</th>
+                                    <th>Gambar Sampul</th>
+                                    <th>Judul</th>
+                                    <th>Pembuat</th>
                                     <th>Status</th>
+                                    <th>Konten</th>
                                     <th>Dibuat Pada</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($visions as $index => $vision)
+                                @forelse ($news as $index => $news_item)
                                     <tr>
                                         <td class="text-center">
-                                            @if ($visions instanceof LengthAwarePaginator)
-                                                {{ $visions->firstItem() + $loop->index }}
+                                            @if ($news instanceof LengthAwarePaginator)
+                                                {{ $news->firstItem() + $loop->index }}
                                             @else
                                                 {{ $loop->iteration }}
                                             @endif
                                         </td>
-                                        <td>{{ $vision->content ? Str::limit($vision->content, 50, '...') : '-' }}</td>
-                                        <td>{{ $vision->is_active ? 'Aktif' : 'Tidak Aktif' }}</td>
-                                        <td>{{ $vision->created_at?->format('d M Y H:i') }}</td>
+                                        <td>
+                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $news_item->cover_image_url }}" alt="{{ $news_item->title }}">
+                                        </td>
+                                        <td>{{ $news_item->title ?? '-' }}</td>
+                                        <td>{{ $news_item->user?->name ? ucwords(strtolower($news_item->user->name)) : '-' }}</td>
+                                        <td>{{ $news_item->content ? Str::limit($news_item->content, 50, '...') : '-' }}</td>
+                                        <td>{{ $news_item->status?->label() ?? '-' }}</td>
+                                        <td>{{ $news_item->created_at?->format('d M Y H:i') }}</td>
                                         <td class="text-center">
                                             <div class="dropdown">
                                                 <button type="button" class="btn border-0 p-0 dropdown-toggle hide-arrow"
@@ -136,20 +148,20 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.visions.show', $vision->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.news.show', $news_item->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.visions.edit', $vision->id) }}">
+                                                        href="{{ route('dashboard.admin.master-data.news.edit', $news_item->id) }}">
                                                         <i class="ti ti-pencil me-1"></i> Edit
                                                     </a>
-                                                    <form id="form-delete-{{ $vision->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.visions.destroy', $vision->id) }}"
+                                                    <form id="form-delete-{{ $news_item->id }}"
+                                                        action="{{ route('dashboard.admin.master-data.news.destroy', $news_item->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $vision->id }}" data-name="{{ $vision->content }}">
+                                                            data-id="{{ $news_item->id }}" data-name="{{ $news_item->content }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>
@@ -159,9 +171,9 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="8" class="text-center">
                                             <div class="alert alert-warning my-2" role="alert">
-                                                Tidak ada data visi yang ditemukan dengan kriteria tersebut.
+                                                Tidak ada data berita yang ditemukan dengan kriteria tersebut.
                                             </div>
                                         </td>
                                     </tr>
@@ -169,10 +181,10 @@
                             </tbody>
                         </table>
                     </div>
-                    @if ($visions instanceof LengthAwarePaginator && $visions->hasPages())
+                    @if ($news instanceof LengthAwarePaginator && $news->hasPages())
                         <div class="overflow-x-auto mt-0 py-1">
                             <div class="d-flex justify-content-center d-md-block w-100 px-3">
-                                {{ $visions->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+                                {{ $news->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
                             </div>
                         </div>
                     @endif
@@ -184,11 +196,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    const visionId = this.getAttribute('data-id');
-                    const visionContent = this.getAttribute('data-name');
+                    const newsId = this.getAttribute('data-id');
+                    const newsContent = this.getAttribute('data-name');
                     Swal.fire({
-                        title: "Hapus Data Visi?",
-                        text: "Apakah Anda yakin ingin menghapus data visi \"" + visionContent + "\"? Aksi ini tidak dapat dibatalkan.",
+                        title: "Hapus Data Berita?",
+                        text: "Apakah Anda yakin ingin menghapus data berita \"" + newsContent + "\"? Aksi ini tidak dapat dibatalkan.",
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d33",
@@ -197,26 +209,20 @@
                         cancelButtonText: "Batal"
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.getElementById('form-delete-' + visionId).submit();
+                            document.getElementById('form-delete-' + newsId).submit();
                         }
                     });
                 });
             });
         });
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const typeSelect = document.getElementById('filterType');
             const textInputWrapper = document.getElementById('filterTextWrapper');
             const startDateWrapper = document.getElementById('filterStartDateWrapper');
             const endDateWrapper = document.getElementById('filterEndDateWrapper');
             function updateFilterFields() {
                 const value = typeSelect.value;
-                if (!value) {
-                    textInputWrapper.classList.remove('d-none');
-                    startDateWrapper.classList.add('d-none');
-                    endDateWrapper.classList.add('d-none');
-                    return;
-                }
-                if (value === 'date') {
+                if (value === 'date' || value === 'published_at') {
                     textInputWrapper.classList.add('d-none');
                     startDateWrapper.classList.remove('d-none');
                     endDateWrapper.classList.remove('d-none');

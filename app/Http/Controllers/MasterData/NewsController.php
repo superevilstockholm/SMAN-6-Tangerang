@@ -33,7 +33,10 @@ class NewsController extends Controller
                 $query->where('user_id', $request->user()->id);
             }
             // Search
-            $allowed_types = ['title', 'slug', 'content', 'published_at', 'user_name', 'date'];
+            $baseAllowedTypes = ['title', 'slug', 'content', 'published_at', 'date'];
+            $allowed_types = $request->user()->role === RoleEnum::TEACHER
+                ? $baseAllowedTypes
+                : array_merge($baseAllowedTypes, ['user_name']);
             $type = $request->query('type');
             if ($type && in_array($type, $allowed_types)) {
                 if (in_array($type, ['date', 'published_at'])) {

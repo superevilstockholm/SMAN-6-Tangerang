@@ -31,7 +31,7 @@
         <div class="col">
             <div class="card my-0">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.news.index') }}" id="filterForm">
+                    <form method="GET" action="{{ route('dashboard.teacher.master-data.news.index') }}" id="filterForm">
                         <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center mb-3 gap-2 gap-md-0">
                             <div class="d-flex align-items-center">
                                 @php

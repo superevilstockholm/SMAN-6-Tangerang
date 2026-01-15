@@ -124,6 +124,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
+                                    <th>Gambar</th>
                                     <th>Judul</th>
                                     <th>Deskripsi</th>
                                     <th>Tahun</th>
@@ -140,6 +141,9 @@
                                             @else
                                                 {{ $loop->iteration }}
                                             @endif
+                                        </td>
+                                        <td>
+                                            <img class="object-fit-cover rounded" style="width: 100px; height: 100px; object-position: center;" src="{{ $school_history->image_path_url }}" alt="{{ $school_history->title ?? '-' }}">
                                         </td>
                                         <td>{{ $school_history->title ?? '-' }}</td>
                                         <td>{{ $school_history->description ? Str::limit($school_history->description, 50, '...') : '-' }}</td>

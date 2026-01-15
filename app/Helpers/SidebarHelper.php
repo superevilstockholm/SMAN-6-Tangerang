@@ -23,7 +23,7 @@ if (!function_exists('adminSidebarItems')) {
         ];
         foreach ($items as $group => &$groupItems) {
             foreach ($groupItems as &$item) {
-                if ($item['route'] === 'dashboard.admin.index' || $item['route'] === 'dashboard.teacher.index') {
+                if ($item['route'] === 'dashboard.admin.index') {
                     $item['active_pattern'] = $item['route'];
                 } else {
                     $item['active_pattern'] = Str::replaceLast('.index', '.*', $item['route']);
@@ -37,11 +37,24 @@ if (!function_exists('adminSidebarItems')) {
 if (!function_exists('teacherSidebarItems')) {
     function teacherSidebarItems(): array
     {
-        return [
+        $items = [
             'main' => [
                 ['label' => 'dashboard', 'icon' => 'ti ti-dashboard', 'route' => 'dashboard.teacher.index'],
             ],
+            'master data' => [
+                ['label' => 'news', 'icon' => 'ti ti-news', 'route' => 'dashboard.teacher.master-data.news.index'],
+            ],
         ];
+        foreach ($items as $group => &$groupItems) {
+            foreach ($groupItems as &$item) {
+                if ($item['route'] === 'dashboard.teacher.index') {
+                    $item['active_pattern'] = $item['route'];
+                } else {
+                    $item['active_pattern'] = Str::replaceLast('.index', '.*', $item['route']);
+                }
+            }
+        }
+        return $items;
     }
 }
 

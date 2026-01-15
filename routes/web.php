@@ -67,7 +67,7 @@ Route::middleware(['auth.sanctum.cookie', 'activity.log'])->group(function () {
         Route::middleware(['role:teacher'])->prefix('teacher')->name('teacher.')->group(function () {
             Route::get('/', function () {
                 return view('pages.dashboard.teacher.index', [
-                    'meta' => ['sidebarItems' => adminSidebarItems()],
+                    'meta' => ['sidebarItems' => teacherSidebarItems()],
                 ]);
             })->name('index');
             Route::prefix('master-data')->name('master-data.')->middleware(['validate.pagination'])->group(function () {

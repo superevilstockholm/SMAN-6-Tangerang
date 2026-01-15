@@ -70,7 +70,7 @@ class NewsController extends Controller
                     ->appends($request->except('page'));
             return view('pages.dashboard.' . $request->user()->role->value . '.master-data.news.index', [
                 'meta' => [
-                    'sidebarItems' => adminSidebarItems(),
+                    'sidebarItems' => $request->user()->role === RoleEnum::TEACHER ? teacherSidebarItems() : adminSidebarItems(),
                 ],
                 'news' => $news,
             ]);
@@ -87,7 +87,7 @@ class NewsController extends Controller
         try {
             return view('pages.dashboard.' . $request->user()->role->value . '.master-data.news.create', [
                 'meta' => [
-                    'sidebarItems' => adminSidebarItems(),
+                    'sidebarItems' => $request->user()->role === RoleEnum::TEACHER ? teacherSidebarItems() : adminSidebarItems(),
                 ]
             ]);
         } catch (Throwable $e) {
@@ -151,9 +151,12 @@ class NewsController extends Controller
     public function show(Request $request, News $news): View | RedirectResponse
     {
         try {
+            if ($request->user()->role === RoleEnum::TEACHER && $news->user_id !== $request->user()->id) {
+                return redirect()->route('dashboard.' . $request->user()->role->value . '.master-data.news.index')->with('error', 'News not found.');
+            }
             return view('pages.dashboard.' . $request->user()->role->value . '.master-data.news.show', [
                 'meta' => [
-                    'sidebarItems' => adminSidebarItems(),
+                    'sidebarItems' => $request->user()->role === RoleEnum::TEACHER ? teacherSidebarItems() : adminSidebarItems(),
                 ],
                 'news' => $news->load('user'),
             ]);
@@ -176,7 +179,7 @@ class NewsController extends Controller
             }
             return view('pages.dashboard.' . $request->user()->role->value . '.master-data.news.edit', [
                 'meta' => [
-                    'sidebarItems' => adminSidebarItems(),
+                    'sidebarItems' => $request->user()->role === RoleEnum::TEACHER ? teacherSidebarItems() : adminSidebarItems(),
                 ],
                 'news' => $news,
             ]);

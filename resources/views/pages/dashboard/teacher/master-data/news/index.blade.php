@@ -115,8 +115,8 @@
                                     <th>Gambar Sampul</th>
                                     <th>Judul</th>
                                     <th>Pembuat</th>
-                                    <th>Status</th>
                                     <th>Konten</th>
+                                    <th>Status</th>
                                     <th>Dibuat Pada</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>

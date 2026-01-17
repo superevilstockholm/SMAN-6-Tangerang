@@ -93,7 +93,6 @@
             <div class="card my-0">
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
-                    @endif
                     <a href="{{ route('dashboard.teacher.master-data.news.edit', $news->id) }}"
                         class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Berita

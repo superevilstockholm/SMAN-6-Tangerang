@@ -18,7 +18,7 @@
                         <p class="p-0 m-0 fw-medium text-muted">Manajemen data berita.</p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="{{ route('dashboard.admin.master-data.news.create') }}"
+                        <a href="{{ route('dashboard.teacher.master-data.news.create') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
                             <i class="ti ti-plus me-1"></i> Tambah Berita
                         </a>
@@ -101,7 +101,7 @@
                             <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-search"></i> Cari
                             </button>
-                            <a href="{{ route('dashboard.admin.master-data.news.index') }}"
+                            <a href="{{ route('dashboard.teacher.master-data.news.index') }}"
                                 class="btn btn-secondary d-flex align-items-center justify-content-center">
                                 <i class="ti ti-rotate-clockwise-2"></i> Reset
                             </a>
@@ -147,15 +147,15 @@
                                                 </button>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.news.show', $news_item->id) }}">
+                                                        href="{{ route('dashboard.teacher.master-data.news.show', $news_item->id) }}">
                                                         <i class="ti ti-eye me-1"></i> Lihat
                                                     </a>
                                                     <a class="dropdown-item"
-                                                        href="{{ route('dashboard.admin.master-data.news.edit', $news_item->id) }}">
+                                                        href="{{ route('dashboard.teacher.master-data.news.edit', $news_item->id) }}">
                                                         <i class="ti ti-pencil me-1"></i> Edit
                                                     </a>
                                                     <form id="form-delete-{{ $news_item->id }}"
-                                                        action="{{ route('dashboard.admin.master-data.news.destroy', $news_item->id) }}"
+                                                        action="{{ route('dashboard.teacher.master-data.news.destroy', $news_item->id) }}"
                                                         method="POST">
                                                         @csrf
                                                         @method('DELETE')

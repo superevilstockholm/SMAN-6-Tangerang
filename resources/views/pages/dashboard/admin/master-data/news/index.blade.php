@@ -161,7 +161,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="dropdown-item text-danger btn-delete"
-                                                            data-id="{{ $news_item->id }}" data-name="{{ $news_item->content }}">
+                                                            data-id="{{ $news_item->id }}" data-name="{{ $news_item->title }}">
                                                             <i class="ti ti-trash me-1 text-danger"></i> Hapus
                                                         </button>
                                                     </form>

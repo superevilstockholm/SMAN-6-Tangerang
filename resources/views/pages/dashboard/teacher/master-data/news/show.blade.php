@@ -100,7 +100,7 @@
                     <form id="form-delete-{{ $news->id }}" action="{{ route('dashboard.teacher.master-data.news.destroy', $news->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $news->id }}" data-name="{{ $news->name }}">
+                        <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $news->id }}" data-name="{{ $news->title }}">
                             <i class="ti ti-trash me-1"></i> Hapus Berita
                         </button>
                     </form>

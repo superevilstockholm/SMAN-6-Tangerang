@@ -86,11 +86,13 @@
 </style>
 </head>
 @endpush
+@push('js_top')
+{{-- CKEditor --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+@endpush
 @push('js')
 {{-- Sweet Alert 2 --}}
 <script src="{{ asset('static/js/sweetalert2.min.js') }}" defer></script>
-{{-- CKEditor --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js" defer></script>
 {{-- ====== Start Template ====== --}}
 {{-- Popper JS --}}
 <script src="{{ asset('static/js/plugins/popper.min.js') }}" defer></script>

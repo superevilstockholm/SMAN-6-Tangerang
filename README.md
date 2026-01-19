@@ -1,6 +1,6 @@
-# Website Informasi SMA Negeri 6 Kota Tangerang (Fan-Made / Non-Resmi) - WIP
+# Website Informasi SMA Negeri 6 Kota Tangerang (Non-Resmi) - WIP
 
-Website ini merupakan proyek pengembangan web bersifat fan-made (tidak resmi) yang dibuat sebagai media latihan, pembelajaran, dan portofolio pengembangan sistem informasi sekolah.
+Website ini merupakan proyek pengembangan web bersifat tidak resmi yang dibuat sebagai media latihan, pembelajaran, dan portofolio pengembangan sistem informasi sekolah.
 
 Website ini tidak mewakili, tidak dikelola, dan tidak memiliki afiliasi resmi dengan SMA Negeri 6 Kota Tangerang. Seluruh konten bersifat informatif dan simulatif.
 

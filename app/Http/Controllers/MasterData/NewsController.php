@@ -107,8 +107,11 @@ class NewsController extends Controller
                 'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
                 'content' => 'required|string',
                 'status' => ['required', Rule::enum(NewsStatusEnum::class)],
-                'published_at' => 'nullable|date',
+                'published_at' => 'nullable|required_if:status,SCHEDULED|date',
             ]);
+            if (empty($validated['published_at'])) {
+                $validated['published_at'] = null;
+            }
             if ($request->hasFile('cover_image')) {
                 $validated['cover_image'] = $request
                     ->file('cover_image')

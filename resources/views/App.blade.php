@@ -39,6 +39,7 @@
 </head>
 
 <body>
+    @stack('js_top')
     @yield('layout')
     {{-- Bootstrap --}}
     <script src="{{ asset('static/js/bootstrap.bundle.min.js') }}"></script>

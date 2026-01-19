@@ -101,6 +101,17 @@ html[data-bs-theme="dark"] .pagination {
     --bs-pagination-disabled-border-color: rgba(var(--bs-body-color-rgb), 0.5) !important;
 }
 
+html[data-bs-theme="dark"] .ck.ck-content, html[data-bs-theme="dark"] .ck.ck-toolbar {
+    background-color: rgb(29, 29, 29) !important;
+    border-color: rgb(33, 33, 33) !important;
+}
+html[data-bs-theme="dark"] .ck.ck-button {
+    color: var(--bs-body-color) !important;
+}
+html[data-bs-theme="dark"] .ck.ck-button:hover {
+    color: rgba(var(--bs-body-color-rgb), 0.5) !important;
+}
+
 @media (min-width: 1025px) {
     .pc-sidebar.pc-sidebar-hide ~ .pc-footer, .pc-sidebar.pc-sidebar-hide ~ .pc-container {
         margin-left: 20px !important;

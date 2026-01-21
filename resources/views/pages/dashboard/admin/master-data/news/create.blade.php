@@ -123,7 +123,7 @@
         const publishedWrapper = document.getElementById('publishedAtWrapper');
         const publishedInput = document.getElementById('publishedAtInput');
         function togglePublishedAt() {
-            if (statusSelect.value === 'SCHEDULED') {
+            if (statusSelect.value === 'scheduled') {
                 publishedWrapper.classList.remove('d-none');
                 publishedInput.required = true;
             } else {

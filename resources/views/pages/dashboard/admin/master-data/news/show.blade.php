@@ -14,7 +14,7 @@
                         <p class="p-0 m-0 fw-medium text-muted">Informasi lengkap berita: {{ $news->id ?? 'N/A' }}</p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="{{ route('dashboard.admin.master-data.news.index') }}"
+                        <a href="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.news.index') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
                             <i class="ti ti-arrow-left me-1"></i> Kembali ke Daftar
                         </a>
@@ -94,16 +94,16 @@
                 <div class="card-body">
                     <h4 class="card-title fw-semibold mb-3">Aksi Cepat</h4>
                     @if (!empty($news->user))
-                        <a href="{{ route('dashboard.admin.master-data.users.show', $news->user->id) }}"
+                        <a href="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.users.show', $news->user->id) }}"
                             class="btn btn-primary w-100 mb-2">
                             <i class="ti ti-eye me-1"></i> Lihat Detail Pengguna
                         </a>
                     @endif
-                    <a href="{{ route('dashboard.admin.master-data.news.edit', $news->id) }}"
+                    <a href="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.news.edit', $news->id) }}"
                         class="btn btn-warning w-100 mb-2">
                         <i class="ti ti-pencil me-1"></i> Edit Berita
                     </a>
-                    <form id="form-delete-{{ $news->id }}" action="{{ route('dashboard.admin.master-data.news.destroy', $news->id) }}" method="POST">
+                    <form id="form-delete-{{ $news->id }}" action="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.news.destroy', $news->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="button" class="btn btn-danger w-100 btn-delete" data-id="{{ $news->id }}" data-name="{{ $news->title }}">

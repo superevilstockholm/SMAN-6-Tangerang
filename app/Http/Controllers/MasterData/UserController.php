@@ -242,7 +242,6 @@ class UserController extends Controller
             unset($validated['profile_picture_image'], $validated['delete_profile_picture']);
             DB::transaction(function () use ($user, $validated) {
                 $oldRole = $user->getOriginal('role');
-                dd($oldRole);
                 if ($oldRole === RoleEnum::TEACHER && $validated['role'] !== RoleEnum::TEACHER) {
                     Teacher::where('user_id', $user->id)->update(['user_id' => null]);
                 }

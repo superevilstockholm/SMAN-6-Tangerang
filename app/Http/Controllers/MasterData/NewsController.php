@@ -133,9 +133,7 @@ class NewsController extends Controller
                         empty($validated['published_at']) ||
                         Carbon::parse($validated['published_at'])->lte(now())
                     ) {
-                        return back()
-                            ->withErrors('Tanggal Publikasi harus lebih besar dari sekarang.')
-                            ->withInput();
+                        return back()->withErrors('Tanggal Publikasi harus lebih besar dari sekarang.')->withInput();
                     }
                     break;
             }

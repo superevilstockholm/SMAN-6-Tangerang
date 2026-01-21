@@ -16,7 +16,7 @@
                         <p class="p-0 m-0 fw-medium text-muted">Formulir untuk memasukkan data berita baru.</p>
                     </div>
                     <div class="d-flex align-items-center">
-                        <a href="{{ route('dashboard.admin.master-data.news.index') }}"
+                        <a href="{{ route('dashboard.' . auth()->user()->role->value . '.master-data.news.index') }}"
                             class="btn btn-sm btn-primary px-4 rounded-pill m-0">
                             <i class="ti ti-arrow-left me-1"></i> Kembali ke Daftar
                         </a>

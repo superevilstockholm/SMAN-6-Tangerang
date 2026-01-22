@@ -33,8 +33,8 @@
                         <div class="col-12">
                             <img src="{{ $news->cover_image_url }}"
                                 alt="Cover Berita"
-                                class="img-fluid rounded"
-                                style="max-height: 200px;">
+                                class="img-fluid rounded w-100 object-fit-cover"
+                                style="max-height: 300px; object-position: center;">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -46,8 +46,8 @@
                         <div class="col-md-8 fw-medium">{{ $news->slug ?? '-' }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4 text-muted">Konten Berita</div>
-                        <div class="col-md-8 fw-medium">
+                        <div class="col-12 text-muted">Konten Berita</div>
+                        <div class="col-12 fw-medium">
                             {!! $news->content ?? '-' !!}
                         </div>
                     </div>

@@ -107,7 +107,23 @@ class NewsController extends Controller
                 'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
                 'content' => 'required|string',
                 'status' => ['required', Rule::enum(NewsStatusEnum::class)],
-                'published_at' => 'nullable|required_if:status,SCHEDULED|date',
+                'published_at' => 'nullable|required_if:status,scheduled|date',
+            ], [
+                'title.required' => 'Kolom judul wajib di isi.',
+                'title.string' => 'Format judul tidak sesuai.',
+                'title.max' => 'Judul tidak boleh lebih dari 255 karakter.',
+                'slug.string' => 'Format slug tidak sesuai.',
+                'slug.max' => 'Slug tidak boleh lebih dari 255 karakter.',
+                'slug.unique' => 'Slug sudah ada.',
+                'cover_image.image' => 'Format gambar tidak sesuai.',
+                'cover_image.mimes' => 'Format gambar tidak sesuai.',
+                'cover_image.max' => 'Ukuran gambar tidak boleh lebih dari 4MB.',
+                'content.required' => 'Kolom konten wajib di isi.',
+                'content.string' => 'Format konten tidak sesuai.',
+                'status.required' => 'Kolom status wajib di isi.',
+                'status.enum' => 'Format status tidak sesuai.',
+                'published_at.required_if' => 'Kolom tanggal publikasi wajib di isi.',
+                'published_at.date' => 'Format tanggal publikasi tidak sesuai.',
             ]);
             if (empty($validated['published_at'])) {
                 $validated['published_at'] = null;
@@ -212,7 +228,23 @@ class NewsController extends Controller
                 'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
                 'content' => 'required|string',
                 'status' => ['required', Rule::enum(NewsStatusEnum::class)],
-                'published_at' => 'nullable|date',
+                'published_at' => 'nullable|required_if:status,scheduled|date',
+            ], [
+                'title.required' => 'Kolom judul wajib di isi.',
+                'title.string' => 'Format judul tidak sesuai.',
+                'title.max' => 'Judul tidak boleh lebih dari 255 karakter.',
+                'slug.string' => 'Format slug tidak sesuai.',
+                'slug.max' => 'Slug tidak boleh lebih dari 255 karakter.',
+                'slug.unique' => 'Slug sudah ada.',
+                'cover_image.image' => 'Format gambar tidak sesuai.',
+                'cover_image.mimes' => 'Format gambar tidak sesuai.',
+                'cover_image.max' => 'Ukuran gambar tidak boleh lebih dari 4MB.',
+                'content.required' => 'Kolom konten wajib di isi.',
+                'content.string' => 'Format konten tidak sesuai.',
+                'status.required' => 'Kolom status wajib di isi.',
+                'status.enum' => 'Format status tidak sesuai.',
+                'published_at.required_if' => 'Kolom tanggal publikasi wajib di isi.',
+                'published_at.date' => 'Format tanggal publikasi tidak sesuai.',
             ]);
             if ($request->hasFile('cover_image')) {
                 if ($news->cover_image) {

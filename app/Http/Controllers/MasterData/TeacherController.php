@@ -103,6 +103,15 @@ class TeacherController extends Controller
                 'email' => 'required_if:with_user,1|email|unique:users,email',
                 'password' => 'required_if:with_user,1|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-_]).{8,255}$/',
                 'profile_picture_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            ], [
+                'email.unique' => 'The email has already been taken.',
+                'password.required_if' => 'The password field is required when creating a user.',
+                'password.min' => 'The password must be at least 8 characters.',
+                'password.max' => 'The password must not be greater than 255 characters.',
+                'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                'profile_picture_image.image' => 'The profile picture must be an image.',
+                'profile_picture_image.mimes' => 'The profile picture must be a JPEG, PNG, JPG, or WEBP image.',
+                'profile_picture_image.max' => 'The profile picture size must not be greater than 4MB.',
             ]);
             DB::transaction(function () use ($validated, $request) {
                 $userId = null;
@@ -183,6 +192,15 @@ class TeacherController extends Controller
                 'email' => 'required_if:with_user,1|email|unique:users,email',
                 'password' => 'required_if:with_user,1|min:8|max:255|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()\-_]).{8,255}$/',
                 'profile_picture_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            ], [
+                'email.unique' => 'The email has already been taken.',
+                'password.required_if' => 'The password field is required when creating a user.',
+                'password.min' => 'The password must be at least 8 characters.',
+                'password.max' => 'The password must not be greater than 255 characters.',
+                'password.regex' => 'The password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                'profile_picture_image.image' => 'The profile picture must be an image.',
+                'profile_picture_image.mimes' => 'The profile picture must be a JPEG, PNG, JPG, or WEBP image.',
+                'profile_picture_image.max' => 'The profile picture size must not be greater than 4MB.',
             ]);
             DB::transaction(function () use ($validated, $request, $teacher) {
                 $userId = $teacher->user?->id ?? null;
